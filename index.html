@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shop premium quality dry fruits, nuts and dates from GB Dry Fruit. Freshness and quality delivered to your doorstep." />
+  <meta name="theme-color" content="#16833b" />
+  <title>GB Dry Fruit | Nature's Finest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="announcement-bar">
+    <p>Fresh picks from the mountains <span>✦</span> Quality you can taste</p>
+    <p class="announcement-right">Delivery across Pakistan · WhatsApp orders welcome</p>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="GB Dry Fruit home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 4C12 5 5 13 5 25c11 1 19-6 19-21Z" fill="#28a84d"/><path d="M25 5c-1 14 5 24 18 27C46 19 39 8 25 5Z" fill="#f2b544"/><path d="M24 18c-8 7-10 15-5 25 11-5 14-14 5-25Z" fill="#16833b"/><path d="M24 11v29" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <span class="brand-copy"><strong>GB <em>DRY FRUIT</em></strong><small>NATURE'S FINEST</small></span>
+    </a>
+
+    <form class="search-box" id="search-form" role="search">
+      <label class="sr-only" for="search-input">Search products</label>
+      <input id="search-input" type="search" placeholder="Search almonds, dates, pistachios..." autocomplete="off" />
+      <button type="submit" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></button>
+    </form>
+
+    <div class="header-actions">
+      <a class="delivery-pill" href="#contact"><span class="pin-icon">⌖</span><span><small>DELIVERY AREA</small><b>Pakistan <i>Change</i></b></span></a>
+      <button class="cart-trigger" id="open-cart" aria-label="Open shopping cart"><span class="cart-icon">🛒</span><span class="cart-label">Cart</span><b id="cart-count">0</b></button>
+      <a class="login-link" href="#contact" aria-label="Contact us"><span>♙</span><span>Contact</span></a>
+      <button class="mobile-menu" id="mobile-menu" aria-label="Open categories">☰</button>
+    </div>
+  </header>
+
+  <nav class="quick-nav" aria-label="Main navigation">
+    <a href="#home" class="active">Home</a>
+    <a href="#shop">Shop all</a>
+    <a href="#shop" data-nav-category="Nuts">Nuts & Seeds</a>
+    <a href="#shop" data-nav-category="Dates">Dates</a>
+    <a href="#about">Our story</a>
+    <a href="#contact">Contact</a>
+    <span class="nav-note">Handpicked in Gilgit-Baltistan <span>♥</span></span>
+  </nav>
+
+  <main id="home">
+    <section class="hero wrap">
+      <div class="hero-content">
+        <span class="eyebrow"><span></span> GOODNESS IN EVERY HANDFUL</span>
+        <h1>Nature's finest.<br><em>Delivered fresh.</em></h1>
+        <p>Discover carefully selected dry fruits, premium nuts and delicious dates. A little goodness from the mountains, made for every day.</p>
+        <div class="hero-buttons"><a class="button button-green" href="#shop">Shop collection <span>→</span></a><a class="text-link" href="#about">Discover our story</a></div>
+        <div class="hero-proof"><span class="proof-icon">✦</span><span><b>Quality first</b><small>Selected with care, packed with love</small></span></div>
+      </div>
+      <div class="hero-art" aria-label="Assorted premium dry fruits">
+        <div class="hero-stamp">PURE<br><b>GOODNESS</b></div>
+        <div class="hero-bowl bowl-back"><span>✺</span><span>✿</span><span>✺</span></div>
+        <div class="hero-bowl bowl-front"><span>🥜</span><span>🌰</span><span>🥜</span><span>🌰</span></div>
+        <div class="hero-leaf leaf-one">✦</div><div class="hero-leaf leaf-two">✧</div>
+        <div class="hero-caption">FROM GILGIT-BALTISTAN <span>✦</span></div>
+      </div>
+    </section>
+
+    <section class="trust-strip wrap" aria-label="Our promises">
+      <div><span class="trust-icon">❖</span><span><b>Premium selection</b><small>Carefully chosen products</small></span></div>
+      <div><span class="trust-icon">♧</span><span><b>Freshly packed</b><small>Quality in every pack</small></span></div>
+      <div><span class="trust-icon">⌁</span><span><b>Easy ordering</b><small>Order directly on WhatsApp</small></span></div>
+      <div><span class="trust-icon">♡</span><span><b>Made with care</b><small>From our family to yours</small></span></div>
+    </section>
+
+    <section class="shop-layout wrap" id="shop">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-heading"><h2>Shop by category</h2><button class="close-sidebar" id="close-sidebar" aria-label="Close categories">×</button></div>
+        <div class="category-list" id="category-list">
+          <button class="category-button selected" data-category="All"><span>✦</span> All products <b id="all-count">12</b></button>
+          <button class="category-button" data-category="Nuts"><span>◈</span> Nuts <b>5</b></button>
+          <button class="category-button" data-category="Seeds"><span>❋</span> Seeds <b>2</b></button>
+          <button class="category-button" data-category="Dates"><span>✿</span> Dates <b>3</b></button>
+          <button class="category-button" data-category="Dried Fruits"><span>◇</span> Dried fruits <b>2</b></button>
+        </div>
+
+        <div class="sidebar-divider"></div>
+        <div class="filter-heading"><h3>Filter by price</h3><button id="reset-filters">Reset</button></div>
+        <div class="price-inputs"><label>Min price<input id="min-price" type="number" min="0" value="0" /></label><label>Max price<input id="max-price" type="number" min="0" value="2500" /></label></div>
+        <p class="price-hint">Prices in Pakistani Rupees (Rs.)</p>
+        <button class="button button-green apply-filter" id="apply-filter">Apply filter</button>
+
+        <div class="sidebar-divider"></div>
+        <h3 class="top-selling-title">Customer favourites</h3>
+        <div class="mini-products" id="mini-products"></div>
+        <div class="sidebar-note"><span>✦</span><p><b>A little goodness every day.</b><br>Choose your favourite healthy treats.</p></div>
+      </aside>
+
+      <section class="product-area" aria-label="Products">
+        <div class="section-heading">
+          <div><span class="eyebrow small-eyebrow">A LITTLE SOMETHING FOR YOU</span><h2>Dry Fruits <em>&</em> Dates</h2><p id="result-count">Showing all products</p></div>
+          <label class="sort-control">Sort by <select id="sort-select"><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="name">Name: A to Z</option></select></label>
+        </div>
+        <div class="active-filters" id="active-filters"></div>
+        <div class="product-grid" id="product-grid" aria-live="polite"></div>
+        <div class="empty-state" id="empty-state" hidden><span>☹</span><h3>No products found</h3><p>Try another search or clear your filters.</p><button class="button button-green" id="clear-search">Clear filters</button></div>
+      </section>
+    </section>
+
+    <section class="story-section" id="about">
+      <div class="wrap story-inner"><div class="story-mark">GB<span>✦</span></div><div><span class="eyebrow">A STORY ROOTED IN THE MOUNTAINS</span><h2>Good food. Good moments.<br><em>Goodness from GB.</em></h2><p>GB Dry Fruit is built around a simple idea: good quality should be easy to enjoy. We bring together much-loved nuts, seeds and dates for your everyday snacking, family gatherings and thoughtful gifts.</p><a class="text-link" href="#shop">Explore our collection →</a></div></div>
+    </section>
+
+    <section class="newsletter wrap" id="contact"><div><span class="eyebrow">LET'S STAY CONNECTED</span><h2>Need help choosing?</h2><p>Talk to us about products, prices or your order. We're happy to help.</p></div><a class="button button-green whatsapp-link" href="#" id="contact-whatsapp" target="_blank" rel="noopener">Chat on WhatsApp <span>↗</span></a></section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-inner"><a class="brand footer-brand" href="#home"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M24 4C12 5 5 13 5 25c11 1 19-6 19-21Z" fill="#28a84d"/><path d="M25 5c-1 14 5 24 18 27C46 19 39 8 25 5Z" fill="#f2b544"/><path d="M24 18c-8 7-10 15-5 25 11-5 14-14 5-25Z" fill="#16833b"/></svg></span><span class="brand-copy"><strong>GB <em>DRY FRUIT</em></strong><small>NATURE'S FINEST</small></span></a><p>© <span id="year"></span> GB Dry Fruit. All rights reserved.</p><a href="#home" class="back-top">Back to top ↑</a></div></footer>
+
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="drawer-header"><div><span class="eyebrow small-eyebrow">YOUR SELECTION</span><h2>Shopping cart <span id="drawer-count">(0)</span></h2></div><button id="close-cart" class="icon-button" aria-label="Close cart">×</button></div>
+    <div class="cart-items" id="cart-items"><div class="cart-empty"><span>🛒</span><h3>Your cart is waiting</h3><p>Add something delicious to get started.</p><button class="button button-green" id="continue-shopping">Continue shopping</button></div></div>
+    <div class="cart-summary" id="cart-summary" hidden><div class="subtotal"><span>Subtotal</span><b id="cart-subtotal">Rs. 0</b></div><p>Delivery charges, if any, will be confirmed on WhatsApp.</p><button class="button button-green checkout-button" id="checkout-whatsapp">Order on WhatsApp <span>↗</span></button></div>
+  </aside>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
