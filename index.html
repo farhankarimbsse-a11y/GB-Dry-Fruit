@@ -33,7 +33,7 @@
       <a class="delivery-pill" href="#contact"><span class="pin-icon">⌖</span><span><small>DELIVERY AREA</small><b>Pakistan <i>Change</i></b></span></a>
       <button class="cart-trigger" id="open-cart" aria-label="Open shopping cart"><span class="cart-icon">🛒</span><span class="cart-label">Cart</span><b id="cart-count">0</b></button>
       <a class="login-link" href="#contact" aria-label="Contact us"><span>♙</span><span>Contact</span></a>
-      <button class="mobile-menu" id="mobile-menu" aria-label="Open categories">☰</button>
+      <button class="mobile-menu" id="mobile-menu" type="button" aria-label="Open categories" aria-controls="sidebar" aria-expanded="false">☰</button>
     </div>
   </header>
 
@@ -94,10 +94,11 @@
         <div class="mini-products" id="mini-products"></div>
         <div class="sidebar-note"><span>✦</span><p><b>A little goodness every day.</b><br>Choose your favourite healthy treats.</p></div>
       </aside>
+      <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
       <section class="product-area" aria-label="Products">
         <div class="section-heading">
-          <div><span class="eyebrow small-eyebrow">A LITTLE SOMETHING FOR YOU</span><h2>Dry Fruits <em>&</em> Dates</h2><p id="result-count">Showing all products</p></div>
+          <div><span class="eyebrow small-eyebrow">A LITTLE SOMETHING FOR YOU</span><h2>Dry Fruits <em>&</em> Dates</h2><p id="result-count">Showing all products</p><p class="price-disclaimer">Sample display prices — confirm the latest rates and delivery charges with us before ordering.</p></div>
           <label class="sort-control">Sort by <select id="sort-select"><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="name">Name: A to Z</option></select></label>
         </div>
         <div class="active-filters" id="active-filters"></div>
