@@ -35,6 +35,13 @@ const products = [
 const state = {category:"All",search:"",min:0,max:2500,sort:"featured",cart:{},quantities:{}};
 const $ = (selector) => document.querySelector(selector);
 const money = (amount) => `Rs. ${Number(amount).toLocaleString("en-PK")}`;
+const getDeliveryDetails = (city) => {
+  const normalized = String(city || "").trim().toLowerCase().replace(/[.,]/g, "").replace(/\s+/g, " ");
+  const isGilgitCity = normalized === "gilgit" || normalized === "gilgit city";
+  return isGilgitCity
+    ? { fee: 150, label: "Gilgit city" }
+    : { fee: 300, label: "Other cities" };
+};
 const priceLabel = (product) => product.price == null ? "Price on request" : money(product.price);
 
 function getFilteredProducts(){
@@ -237,6 +244,18 @@ function makeWhatsAppUrl(message){
   const number=WHATSAPP_NUMBER.replace(/\D/g,"");
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
+function updateDeliveryEstimate(){
+  const cityField = $("#customer-city");
+  const estimate = $("#delivery-estimate");
+  if(!cityField || !estimate) return;
+  const city = cityField.value.trim();
+  if(!city){
+    estimate.textContent = "Enter your city to see the delivery charge included in your order.";
+    return;
+  }
+  const delivery = getDeliveryDetails(city);
+  estimate.textContent = `Delivery for ${delivery.label}: ${money(delivery.fee)}. This charge will be added to your order total.`;
+}
 function openCheckout(){
   const entries=Object.entries(state.cart).filter(([,quantity])=>quantity>0);
   if(entries.length===0){showToast("Your cart is empty.");return;}
@@ -279,16 +298,20 @@ function checkout(event){
     const lineTotal=p.price*quantity;subtotal+=lineTotal;
     return `• ${p.name} (${p.weight}) x ${quantity} = ${money(lineTotal)}`;
   });
-  const totalLabel=hasPriceOnRequest?`${money(subtotal)} + items to be confirmed` : money(subtotal);
+  const delivery=getDeliveryDetails(customer.city);
+  const grandTotal=subtotal+delivery.fee;
+  const subtotalLine=hasPriceOnRequest?`Subtotal (priced items): ${money(subtotal)} + items to be confirmed`:`Subtotal: ${money(subtotal)}`;
+  const totalLabel=hasPriceOnRequest?`${money(grandTotal)} + price-on-request items` : money(grandTotal);
   const message=[
     "Assalam-o-Alaikum GB Dry Fruit! I would like to place an order:",
     "",
     "ORDER DETAILS",
     ...lines,
     "",
-    `Subtotal: ${totalLabel}`,
-    "Delivery charges: Please confirm",
-    "Estimated delivery: Please confirm",
+    subtotalLine,
+    `Delivery charges (${delivery.label}): ${money(delivery.fee)}`,
+    `Total including delivery: ${totalLabel}`,
+    "Estimated delivery: To be confirmed on WhatsApp",
     "",
     "CUSTOMER DETAILS",
     `Name: ${customer.name}`,
@@ -298,7 +321,7 @@ function checkout(event){
     customer.landmark?`Nearest landmark: ${customer.landmark}`:null,
     customer.note?`Order note: ${customer.note}`:null,
     "",
-    "Please confirm the final amount, delivery charges and expected delivery time. Thank you."
+    "Please confirm product availability and expected delivery time. Thank you."
   ].filter(line=>line!==null).join("\n");
   if(!/^\d{10,15}$/.test(WHATSAPP_NUMBER)){
     showToast("Please add your business WhatsApp number in script.js first.");
@@ -327,6 +350,7 @@ $("#close-cart").addEventListener("click",closeCart);
 $("#drawer-backdrop").addEventListener("click",closeCart);
 $("#checkout-whatsapp").addEventListener("click",openCheckout);
 $("#checkout-form").addEventListener("submit",checkout);
+$("#customer-city").addEventListener("input",updateDeliveryEstimate);
 $("#close-checkout").addEventListener("click",closeCheckout);
 $("#cancel-checkout").addEventListener("click",closeCheckout);
 $("#checkout-modal-backdrop").addEventListener("click",closeCheckout);

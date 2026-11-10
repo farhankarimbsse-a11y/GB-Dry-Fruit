@@ -136,7 +136,7 @@
   <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
     <div class="drawer-header"><div><span class="eyebrow small-eyebrow">YOUR SELECTION</span><h2>Shopping cart <span id="drawer-count">(0)</span></h2></div><button id="close-cart" class="icon-button" aria-label="Close cart">×</button></div>
     <div class="cart-items" id="cart-items"><div class="cart-empty"><span>🛒</span><h3>Your cart is waiting</h3><p>Add something delicious to get started.</p><button class="button button-green" id="continue-shopping">Continue shopping</button></div></div>
-    <div class="cart-summary" id="cart-summary" hidden><div class="subtotal"><span>Subtotal</span><b id="cart-subtotal">Rs. 0</b></div><p>Delivery charges, if any, will be confirmed on WhatsApp.</p><button class="button button-green checkout-button" id="checkout-whatsapp">Order on WhatsApp <span>↗</span></button></div>
+    <div class="cart-summary" id="cart-summary" hidden><div class="subtotal"><span>Subtotal</span><b id="cart-subtotal">Rs. 0</b></div><p>Delivery: Rs. 150 in Gilgit city · Rs. 300 in other cities. City is confirmed at checkout.</p><button class="button button-green checkout-button" id="checkout-whatsapp">Order on WhatsApp <span>↗</span></button></div>
   </aside>
   <div class="checkout-modal" id="checkout-modal" hidden>
     <div class="checkout-modal-backdrop" id="checkout-modal-backdrop"></div>
@@ -154,7 +154,7 @@
         <input id="customer-phone" name="customerPhone" type="tel" autocomplete="tel" placeholder="03XXXXXXXXX" required minlength="10" maxlength="20" />
 
         <label for="customer-city">City / Town <span>*</span></label>
-        <input id="customer-city" name="customerCity" type="text" autocomplete="address-level2" placeholder="e.g. Gilgit, Hunza, Islamabad" required maxlength="80" />
+        <input id="customer-city" name="customerCity" type="text" autocomplete="address-level2" placeholder="e.g. Gilgit, Hunza, Islamabad" required maxlength="80" aria-describedby="delivery-estimate" />
 
         <label for="customer-address">Complete delivery address <span>*</span></label>
         <textarea id="customer-address" name="customerAddress" autocomplete="street-address" rows="3" placeholder="House number, street, area, village or delivery location" required maxlength="500"></textarea>
@@ -165,7 +165,7 @@
         <label for="customer-note">Order / delivery note <small>(optional)</small></label>
         <textarea id="customer-note" name="customerNote" rows="2" placeholder="Any special instructions" maxlength="300"></textarea>
 
-        <div class="delivery-confirm-note"><strong>Delivery charges & timing:</strong> We will confirm these with you on WhatsApp according to your city and address before finalizing the order.</div>
+        <div class="delivery-confirm-note"><strong>Delivery charges:</strong> Gilgit city Rs. 150 · Other cities Rs. 300.<div id="delivery-estimate" class="delivery-estimate" aria-live="polite">Enter your city to see the delivery charge included in your order.</div><small>Estimated delivery time will be confirmed on WhatsApp.</small></div>
         <div class="checkout-form-actions">
           <button class="button button-light" id="cancel-checkout" type="button">Back to cart</button>
           <button class="button button-green" type="submit">Send order on WhatsApp <span>↗</span></button>
@@ -176,6 +176,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="script.js?v=address-checkout-20261110"></script>
+  <script src="script.js?v=delivery-rates-20261110"></script>
 </body>
 </html>
