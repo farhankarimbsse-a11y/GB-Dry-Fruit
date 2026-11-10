@@ -236,3 +236,11 @@
   .hero-gallery .hero-stamp span{font-size:5.5px;}
   .hero-gallery .hero-caption{display:none;}
 }
+
+
+/* Cart drawer reliability patch */
+.cart-drawer{z-index:1001;visibility:hidden;pointer-events:none}
+.cart-drawer.open{z-index:1001;visibility:visible;pointer-events:auto;transform:translateX(0)}
+.drawer-backdrop{z-index:1000}
+.drawer-backdrop.show{z-index:1000;visibility:visible;pointer-events:auto}
+.cart-trigger{cursor:pointer;position:relative;z-index:22;pointer-events:auto}

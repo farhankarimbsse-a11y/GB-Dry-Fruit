@@ -31,7 +31,7 @@
 
     <div class="header-actions">
       <a class="delivery-pill" href="#contact"><span class="pin-icon">⌖</span><span><small>DELIVERY AREA</small><b>Pakistan <i>Change</i></b></span></a>
-      <button class="cart-trigger" id="open-cart" aria-label="Open shopping cart"><span class="cart-icon">🛒</span><span class="cart-label">Cart</span><b id="cart-count">0</b></button>
+      <button class="cart-trigger" id="open-cart" type="button" aria-label="Open shopping cart" aria-controls="cart-drawer" aria-expanded="false" onclick="window.openGBDryFruitCart && window.openGBDryFruitCart()"><span class="cart-icon">🛒</span><span class="cart-label">Cart</span><b id="cart-count">0</b></button>
       <a class="login-link" href="#contact" aria-label="Contact us"><span>♙</span><span>Contact</span></a>
       <button class="mobile-menu" id="mobile-menu" type="button" aria-label="Open categories" aria-controls="sidebar" aria-expanded="false">☰</button>
     </div>
@@ -140,6 +140,6 @@
   </aside>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=cart-fix-20261110"></script>
 </body>
 </html>

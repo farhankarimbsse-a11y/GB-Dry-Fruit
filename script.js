@@ -144,7 +144,9 @@ function renderCart(){
 function addToCart(id){
   const quantity=state.quantities[id]||1;
   state.cart[id]=(state.cart[id]||0)+quantity;
-  renderCart();showToast("Added to your cart!");
+  renderCart();
+  showToast("Added to your cart!");
+  openCart();
 }
 function setQuantity(id,change){
   state.quantities[id]=Math.max(1,Math.min(99,(state.quantities[id]||1)+change));
@@ -167,13 +169,70 @@ function closeCategoryMenu(){
   document.body.style.overflow="";
 }
 function openCart(){
-  $("#cart-drawer").classList.add("open");$("#drawer-backdrop").classList.add("show");
-  $("#cart-drawer").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
+  const drawer = $("#cart-drawer");
+  const backdrop = $("#drawer-backdrop");
+  if (!drawer || !backdrop) {
+    console.error("GB Dry Fruit cart elements are missing from index.html.");
+    showToast("Cart could not open. Please refresh the page.");
+    return;
+  }
+  drawer.classList.add("open");
+  backdrop.classList.add("show");
+  // Inline fallback keeps the cart usable even if an old stylesheet is cached.
+  Object.assign(drawer.style, {
+    display: "flex",
+    position: "fixed",
+    top: "0",
+    right: "0",
+    bottom: "0",
+    width: "min(430px, 100vw)",
+    maxWidth: "100vw",
+    flexDirection: "column",
+    background: "#fff",
+    transform: "translateX(0)",
+    visibility: "visible",
+    opacity: "1",
+    pointerEvents: "auto",
+    zIndex: "1001",
+    boxShadow: "-15px 0 45px rgba(0,0,0,.18)"
+  });
+  Object.assign(backdrop.style, {
+    display: "block",
+    position: "fixed",
+    inset: "0",
+    background: "rgba(15,28,19,.42)",
+    opacity: "1",
+    visibility: "visible",
+    pointerEvents: "auto",
+    zIndex: "1000"
+  });
+  drawer.setAttribute("aria-hidden","false");
+  const trigger = $("#open-cart");
+  if (trigger) trigger.setAttribute("aria-expanded", "true");
+  document.body.style.overflow="hidden";
+  renderCart();
 }
 function closeCart(){
-  $("#cart-drawer").classList.remove("open");$("#drawer-backdrop").classList.remove("show");
-  $("#cart-drawer").setAttribute("aria-hidden","true");document.body.style.overflow="";
+  const drawer = $("#cart-drawer");
+  const backdrop = $("#drawer-backdrop");
+  if (drawer) {
+    drawer.classList.remove("open");
+    drawer.style.transform = "translateX(102%)";
+    drawer.style.pointerEvents = "none";
+    drawer.setAttribute("aria-hidden","true");
+  }
+  if (backdrop) {
+    backdrop.classList.remove("show");
+    backdrop.style.opacity = "0";
+    backdrop.style.visibility = "hidden";
+    backdrop.style.pointerEvents = "none";
+  }
+  const trigger = $("#open-cart");
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+  document.body.style.overflow="";
 }
+// Public fallback used by the header button, including when click listeners are reloaded.
+window.openGBDryFruitCart = openCart;
 function makeWhatsAppUrl(message){
   const number=WHATSAPP_NUMBER.replace(/\D/g,"");
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
@@ -212,7 +271,17 @@ $("#product-grid").addEventListener("click",event=>{
   const fav=event.target.closest(".product-fav");if(fav){fav.textContent=fav.textContent==="♡"?"♥":"♡";fav.style.color=fav.textContent==="♥"?"#dc7272":"";showToast("Your favourite list is just for this visit.");}
 });
 $("#cart-items").addEventListener("click",event=>{if(event.target.id==="continue-shopping"){closeCart();$("#shop").scrollIntoView({behavior:"smooth"});return;}const button=event.target.closest("[data-cart-action]");if(!button)return;const id=button.dataset.id;const action=button.dataset.cartAction;if(action==="remove")delete state.cart[id];else if(action==="plus")state.cart[id]=(state.cart[id]||0)+1;else state.cart[id]=Math.max(0,(state.cart[id]||0)-1);if(state.cart[id]===0)delete state.cart[id];renderCart();});
-$("#open-cart").addEventListener("click",openCart);$("#close-cart").addEventListener("click",closeCart);$("#drawer-backdrop").addEventListener("click",closeCart);$("#checkout-whatsapp").addEventListener("click",checkout);
+$("#close-cart").addEventListener("click",closeCart);
+$("#drawer-backdrop").addEventListener("click",closeCart);
+$("#checkout-whatsapp").addEventListener("click",checkout);
+// Delegated header-cart click is resilient to button markup changes.
+document.addEventListener("click", event => {
+  const cartButton = event.target.closest("#open-cart");
+  if (cartButton) {
+    event.preventDefault();
+    openCart();
+  }
+});
 $("#mobile-menu").addEventListener("click",openCategoryMenu);
 $("#close-sidebar").addEventListener("click",closeCategoryMenu);
 $("#sidebar-backdrop").addEventListener("click",closeCategoryMenu);
