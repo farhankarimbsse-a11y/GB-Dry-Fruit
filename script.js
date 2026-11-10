@@ -237,24 +237,76 @@ function makeWhatsAppUrl(message){
   const number=WHATSAPP_NUMBER.replace(/\D/g,"");
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
-function checkout(){
+function openCheckout(){
   const entries=Object.entries(state.cart).filter(([,quantity])=>quantity>0);
   if(entries.length===0){showToast("Your cart is empty.");return;}
+  const modal=$("#checkout-modal");
+  if(!modal){showToast("Delivery form could not open. Please refresh the page.");return;}
+  modal.hidden=false;
+  document.body.style.overflow="hidden";
+  window.setTimeout(()=>$("#customer-name")?.focus(),30);
+}
+function closeCheckout(){
+  const modal=$("#checkout-modal");
+  if(modal) modal.hidden=true;
+  document.body.style.overflow = $("#cart-drawer")?.classList.contains("open") ? "hidden" : "";
+}
+function checkout(event){
+  if(event) event.preventDefault();
+  const form=$("#checkout-form");
+  if(!form || !form.reportValidity()) return;
+  const entries=Object.entries(state.cart).filter(([,quantity])=>quantity>0);
+  if(entries.length===0){closeCheckout();showToast("Your cart is empty.");return;}
+  const customer={
+    name:$("#customer-name").value.trim(),
+    phone:$("#customer-phone").value.trim(),
+    city:$("#customer-city").value.trim(),
+    address:$("#customer-address").value.trim(),
+    landmark:$("#customer-landmark").value.trim(),
+    note:$("#customer-note").value.trim()
+  };
+  const digits=customer.phone.replace(/\D/g,"");
+  if(digits.length<10 || digits.length>15){
+    showToast("Please enter a valid mobile number.");
+    $("#customer-phone").focus();
+    return;
+  }
   let subtotal=0;
   let hasPriceOnRequest=false;
   const lines=entries.map(([id,quantity])=>{
     const p=products.find(item=>item.id===Number(id));
-    if(p.price == null){hasPriceOnRequest=true;return `• ${p.name} (${p.weight}) x ${quantity} = Price to confirm`;}
+    if(p.price==null){hasPriceOnRequest=true;return `• ${p.name} (${p.weight}) x ${quantity} = Price to confirm`;}
     const lineTotal=p.price*quantity;subtotal+=lineTotal;
     return `• ${p.name} (${p.weight}) x ${quantity} = ${money(lineTotal)}`;
   });
-  const totalLabel=hasPriceOnRequest?"To be confirmed (some products are price on request)":money(subtotal);
-  const message=`Assalam-o-Alaikum GB Dry Fruit! I would like to place an order:\n\n${lines.join("\n")}\n\nSubtotal: ${totalLabel}\n\nPlease confirm availability, final price, delivery charges and payment details.\nName:\nDelivery city/address:`;
+  const totalLabel=hasPriceOnRequest?`${money(subtotal)} + items to be confirmed` : money(subtotal);
+  const message=[
+    "Assalam-o-Alaikum GB Dry Fruit! I would like to place an order:",
+    "",
+    "ORDER DETAILS",
+    ...lines,
+    "",
+    `Subtotal: ${totalLabel}`,
+    "Delivery charges: Please confirm",
+    "Estimated delivery: Please confirm",
+    "",
+    "CUSTOMER DETAILS",
+    `Name: ${customer.name}`,
+    `Mobile / WhatsApp: ${customer.phone}`,
+    `City / Town: ${customer.city}`,
+    `Complete address: ${customer.address}`,
+    customer.landmark?`Nearest landmark: ${customer.landmark}`:null,
+    customer.note?`Order note: ${customer.note}`:null,
+    "",
+    "Please confirm the final amount, delivery charges and expected delivery time. Thank you."
+  ].filter(line=>line!==null).join("\n");
   if(!/^\d{10,15}$/.test(WHATSAPP_NUMBER)){
     showToast("Please add your business WhatsApp number in script.js first.");
     return;
   }
-  window.open(makeWhatsAppUrl(message),"_blank","noopener,noreferrer");
+  const url=makeWhatsAppUrl(message);
+  closeCheckout();
+  window.open(url,"_blank","noopener,noreferrer");
 }
 
 $("#search-form").addEventListener("submit",event=>{event.preventDefault();state.search=$("#search-input").value;renderProducts();$("#shop").scrollIntoView({behavior:"smooth"});});
@@ -273,7 +325,11 @@ $("#product-grid").addEventListener("click",event=>{
 $("#cart-items").addEventListener("click",event=>{if(event.target.id==="continue-shopping"){closeCart();$("#shop").scrollIntoView({behavior:"smooth"});return;}const button=event.target.closest("[data-cart-action]");if(!button)return;const id=button.dataset.id;const action=button.dataset.cartAction;if(action==="remove")delete state.cart[id];else if(action==="plus")state.cart[id]=(state.cart[id]||0)+1;else state.cart[id]=Math.max(0,(state.cart[id]||0)-1);if(state.cart[id]===0)delete state.cart[id];renderCart();});
 $("#close-cart").addEventListener("click",closeCart);
 $("#drawer-backdrop").addEventListener("click",closeCart);
-$("#checkout-whatsapp").addEventListener("click",checkout);
+$("#checkout-whatsapp").addEventListener("click",openCheckout);
+$("#checkout-form").addEventListener("submit",checkout);
+$("#close-checkout").addEventListener("click",closeCheckout);
+$("#cancel-checkout").addEventListener("click",closeCheckout);
+$("#checkout-modal-backdrop").addEventListener("click",closeCheckout);
 // Delegated header-cart click is resilient to button markup changes.
 document.addEventListener("click", event => {
   const cartButton = event.target.closest("#open-cart");
@@ -288,6 +344,7 @@ $("#sidebar-backdrop").addEventListener("click",closeCategoryMenu);
 document.addEventListener("keydown",event=>{
   if(event.key!=="Escape")return;
   closeCategoryMenu();
+  if(!$("#checkout-modal").hidden) closeCheckout();
   closeCart();
 });
 $("#contact-whatsapp").addEventListener("click",event=>{if(!/^\d{10,15}$/.test(WHATSAPP_NUMBER)){event.preventDefault();showToast("Add your business WhatsApp number in script.js to activate this link.");}else event.currentTarget.href=makeWhatsAppUrl("Assalam-o-Alaikum GB Dry Fruit! I would like to know more about your products.");});
