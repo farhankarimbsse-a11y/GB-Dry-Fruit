@@ -2,7 +2,7 @@
    Before taking real orders, replace WHATSAPP_NUMBER below with your WhatsApp
    number in international format (Pakistan example: 923001234567). Do not add + or spaces.
 */
-const WHATSAPP_NUMBER = ""; // ADD YOUR BUSINESS WHATSAPP NUMBER, e.g. 923001234567
+const WHATSAPP_NUMBER = "923555850225"; // GB Dry Fruit WhatsApp business number
 
 const products = [
   {id:1,name:"Almonds (Badam)",category:"Nuts",weight:"200 Grams",price:875,emoji:"🥜",image:"images/almonds.webp",tag:"BEST SELLER",featured:1,search:"badam almond almonds"},
