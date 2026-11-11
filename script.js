@@ -434,6 +434,29 @@
       if (count) count.textContent = "Product catalogue unavailable";
       showToast("Product list could not load. Please refresh the page.");
     }
+     
+function addToCart(id) {
+  const product = products.find((item) => item.id === id);
+
+  if (!product) return;
+
+  if (product.price == null || product.price === "") {
+    showToast("Price is on request. Please contact us on WhatsApp.");
+    return;
+  }
+
+  const quantity = state.quantities[id] || 1;
+  state.cart[id] = (state.cart[id] || 0) + quantity;
+
+  // Update cart products and total
+  renderCart();
+
+  // Automatically open the right-side cart
+  openCart();
+
+  showToast("Added to your cart!");
+}
+
   }
 
   startStore();
