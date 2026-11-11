@@ -205,6 +205,7 @@
     const quantity = state.quantities[key] || 1;
     state.cart[key] = (state.cart[key] || 0) + quantity;
     renderCart();
+     openCart();
     showToast(`${product.name} added to your cart.`);
   }
 
