@@ -118,9 +118,12 @@
 
   function init() {
     if (document.getElementById(SECTION_ID)) return;
-    const anchor = document.getElementById("mountain-mix-lab") || document.querySelector(".mountain-mix-section") || document.querySelector(".trust-strip");
+    // Keep the existing 20-product shop exactly as it is. Insert the Gift Box
+    // designer only after the complete shop layout, so it appears below the
+    // original product catalogue (and before the story section).
+    const anchor = document.querySelector(".shop-layout") || document.getElementById("shop");
     if (!anchor) {
-      console.error("GB Gift Box: could not find a suitable place to insert the section.");
+      console.error("GB Gift Box: could not find the existing product catalogue section (.shop-layout / #shop).");
       return;
     }
 
