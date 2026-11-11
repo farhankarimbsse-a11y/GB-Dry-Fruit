@@ -268,3 +268,273 @@
 .button-light{background:#f1f3ed;color:#334438;border:1px solid #e4e8df}
 .button-light:hover{background:#e8ede4}
 @media(max-width:560px){.checkout-modal{padding:9px;align-items:end}.checkout-dialog{width:100%;max-height:94vh;border-radius:18px 18px 12px 12px;padding:19px 16px calc(18px + env(safe-area-inset-bottom))}.checkout-dialog-header h2{font-size:23px}.checkout-form-actions{display:grid;grid-template-columns:1fr}.checkout-form-actions .button{width:100%;justify-content:center}}
+
+/* =====================================
+   GB MOUNTAIN CULTURE THEME
+   Mountain Mix Lab - Full Website
+===================================== */
+
+:root {
+  --green: #174b35;
+  --green-dark: #103624;
+  --green-soft: #e5eee5;
+  --gold: #c99a4b;
+  --cream: #f4f0e5;
+  --cream-2: #eae3d3;
+  --ink: #20352a;
+  --muted: #737d70;
+  --line: #ded8c8;
+  --white: #fffdf8;
+  --shadow: 0 12px 35px rgba(25,50,35,.12);
+}
+
+/* Main background */
+body {
+  background-color: #f4f0e5;
+  color: var(--ink);
+}
+
+/* Header */
+.site-header {
+  background: #103624;
+  border-bottom: 2px solid #c99a4b;
+}
+
+.brand-copy strong {
+  color: #fffdf5;
+}
+
+.brand-copy em {
+  color: #e2b65f;
+}
+
+.brand-copy small {
+  color: #d4dfd1;
+}
+
+.cart-trigger,
+.login-link {
+  color: #fff;
+}
+
+.delivery-pill {
+  border-color: #66836c;
+  color: white;
+}
+
+.delivery-pill small {
+  color: #d4dfd1;
+}
+
+.search-box {
+  background: #fffdf8;
+}
+
+/* Navigation */
+.quick-nav {
+  background: #174b35;
+  color: #f7f2e6;
+  border-color: #c99a4b;
+}
+
+.quick-nav a:hover,
+.quick-nav a.active {
+  color: #eac477;
+}
+
+.quick-nav a.active:after {
+  background: #eac477;
+}
+
+.nav-note {
+  color: #e5e1d2;
+}
+
+/* Real Hunza mountain hero */
+.hero {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(12,35,25,.91),
+      rgba(15,49,34,.72) 48%,
+      rgba(15,49,34,.12)
+    ),
+    url("https://commons.wikimedia.org/wiki/Special:FilePath/Hunza_Valley%2C_Gilgit_Baltistan.JPG")
+    center 48% / cover no-repeat;
+  border: 1px solid #c99a4b;
+  box-shadow: 0 18px 40px rgba(20,45,29,.18);
+}
+
+.hero h1 {
+  color: #fffdf5;
+}
+
+.hero h1 em {
+  color: #e9c16f;
+}
+
+.hero-content > p {
+  color: #f0eee4;
+}
+
+.eyebrow {
+  color: #f2ce83;
+}
+
+.hero-proof b {
+  color: white;
+}
+
+.hero-proof small {
+  color: #e1e7dc;
+}
+
+.hero-stamp {
+  background: #174b35;
+  border-color: #e2bb69;
+}
+
+.hero-art {
+  background: transparent;
+}
+
+/* Trust section */
+.trust-strip {
+  background: #fffdf8;
+  border-color: #d8c9a7;
+}
+
+.trust-icon {
+  background: #e5eee5;
+  color: #174b35;
+}
+
+/* Product section */
+.sidebar,
+.product-card {
+  background: #fffdf8;
+  border-color: #ded3bd;
+}
+
+.product-card {
+  box-shadow: 0 6px 22px rgba(30,52,34,.08);
+}
+
+.product-card:hover {
+  border-color: #c99a4b;
+  box-shadow: 0 15px 32px rgba(30,52,34,.15);
+}
+
+.product-image {
+  background: linear-gradient(145deg,#eee8d8,#faf6eb);
+}
+
+.product-category,
+.product-price {
+  color: #174b35;
+}
+
+.add-button,
+.button-green {
+  background: #174b35;
+}
+
+.add-button:hover,
+.button-green:hover {
+  background: #103624;
+}
+
+.quantity-control {
+  background: #eee9db;
+  border-color: #dfd4bd;
+}
+
+/* GB cultural-inspired decorative sections */
+.story-section {
+  background-color: #e8e2d2;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 24px,
+      rgba(174,130,64,.045) 25px,
+      transparent 27px
+    );
+  border-top: 2px solid #c99a4b;
+  border-bottom: 2px solid #c99a4b;
+}
+
+.story-mark {
+  background: #174b35;
+  box-shadow: inset 0 0 0 7px #ffffff35;
+}
+
+.story-inner h2 em {
+  color: #b27e32;
+}
+
+/* Newsletter */
+.newsletter {
+  background: #f4f0e5;
+}
+
+/* Footer */
+.site-footer {
+  background: #103624;
+  border-top: 3px solid #c99a4b;
+}
+
+/* Gift and custom mix sections */
+.product-area,
+.shop-layout {
+  color: #20352a;
+}
+
+.product-card,
+.sidebar,
+.trust-strip {
+  border-radius: 14px;
+}
+
+/* Checkout */
+.checkout-dialog {
+  background: #fffdf8;
+  border: 1px solid #d7c49c;
+}
+
+.checkout-dialog-header {
+  border-color: #ded3bd;
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus {
+  border-color: #b58b45;
+  box-shadow: 0 0 0 3px rgba(181,139,69,.12);
+}
+
+.delivery-confirm-note {
+  background: #e8eee2;
+}
+
+/* Mobile */
+@media(max-width:800px) {
+  .hero {
+    background-position: 58% center;
+  }
+
+  .hero h1 {
+    color: white;
+  }
+
+  .hero-content > p {
+    color: #f0eee4;
+  }
+}
+
+/* Smooth appearance */
+.product-card,
+.button,
+.add-button,
+.category-button {
+  transition: all .25s ease;
+}
