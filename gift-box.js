@@ -8,6 +8,28 @@
   const SECTION_ID = "gb-mountain-gift-box";
   const MODAL_ID = "gb-gift-checkout-modal";
   const PALETTE = ["almond", "pistachio", "date", "apricot", "seed", "berry"];
+  const GIFT_DESIGNS = [
+    { id: 1, name: "Emerald Gold", finish: "Green · gold ribbon" },
+    { id: 2, name: "Ivory Blossom", finish: "Ivory · floral gold" },
+    { id: 3, name: "Royal Burgundy", finish: "Burgundy · gold pattern" },
+    { id: 4, name: "Midnight Gold", finish: "Black · gold ribbon" },
+    { id: 5, name: "Botanical Kraft", finish: "Natural · green leaves" },
+    { id: 6, name: "Heritage Wood", finish: "Carved wooden box" },
+    { id: 7, name: "Royal Navy", finish: "Navy · blue satin" },
+    { id: 8, name: "Ivory Palace", finish: "Ivory · gold detailing" },
+    { id: 9, name: "Forest Classic", finish: "Deep green · gold trim" },
+    { id: 10, name: "Ruby Ribbon", finish: "Ruby red · satin bow" },
+    { id: 11, name: "Garden Pearl", finish: "Cream · green botanical" },
+    { id: 12, name: "Black Marble", finish: "Black · marble gold" },
+    { id: 13, name: "Emerald Octagon", finish: "Octagonal · green velvet" },
+    { id: 14, name: "Walnut Heritage", finish: "Wood · tree engraving" },
+    { id: 15, name: "Floral Pearl", finish: "Pearl · burgundy ribbon" },
+    { id: 16, name: "Royal Purple", finish: "Purple · gold ornament" },
+    { id: 17, name: "Marble Gold", finish: "White marble · gold bow" },
+    { id: 18, name: "Mountain Forest", finish: "Green · mountain tree" },
+    { id: 19, name: "Kraft Garden", finish: "Kraft · botanical print" },
+    { id: 20, name: "Noir Signature", finish: "Black · gold floral" }
+  ];
   const money = (value) => `Rs. ${Math.round(Number(value) || 0).toLocaleString("en-PK")}`;
   const clean = (value) => String(value ?? "").trim();
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
@@ -23,6 +45,20 @@
     #${SECTION_ID} h2 em{font-style:normal;color:var(--gb-green)}
     #${SECTION_ID} .gbgb-intro{max-width:680px;margin:0;color:#687568;font-size:13px;line-height:1.7}
     #${SECTION_ID} .gbgb-count-pill{flex:none;padding:9px 13px;border:1px solid #dce8d7;border-radius:99px;background:#fff;color:#286b39;font-size:11px;font-weight:800;white-space:nowrap}
+    #${SECTION_ID} .gbgb-design-picker{margin:0 0 20px;padding:15px;border:1px solid #e5e9dc;border-radius:16px;background:rgba(255,255,255,.78)}
+    #${SECTION_ID} .gbgb-design-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:11px}
+    #${SECTION_ID} .gbgb-design-head strong{display:block;color:#29412e;font-size:13px}
+    #${SECTION_ID} .gbgb-design-head small{display:block;margin-top:4px;color:#7d897b;font-size:10px;line-height:1.5}
+    #${SECTION_ID} .gbgb-design-current{flex:none;padding:7px 10px;border:1px solid #dce8d7;border-radius:99px;background:#f5faf2;color:#286b39;font-size:10px;font-weight:850}
+    #${SECTION_ID} .gbgb-design-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch;padding:4px 3px 7px}
+    #${SECTION_ID} .gbgb-design-card{min-width:0;padding:5px;border:1px solid #e4e7dd;border-radius:12px;background:#fff;color:#304332;text-align:left;cursor:pointer;box-shadow:0 3px 10px rgba(34,53,35,.04);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;position:relative;z-index:0}
+    #${SECTION_ID} .gbgb-design-card:hover{transform:translateY(-2px) scale(1.015);box-shadow:0 8px 18px rgba(31,55,33,.1);z-index:1}
+    #${SECTION_ID} .gbgb-design-card.is-selected{transform:scale(1.045);border:2px solid var(--gb-green);padding:4px;box-shadow:0 10px 22px rgba(22,131,59,.16);z-index:2}
+    #${SECTION_ID} .gbgb-design-photo{display:block;width:100%;aspect-ratio:1.2;border-radius:8px;background-image:url('./gift-box-designs.webp');background-size:500% 400%;background-repeat:no-repeat;background-color:#f4f0e6}
+    #${SECTION_ID} .gbgb-design-name{display:block;margin:7px 3px 2px;color:#293c2d;font-size:10px;font-weight:900;line-height:1.25}
+    #${SECTION_ID} .gbgb-design-finish{display:block;min-height:24px;margin:0 3px;color:#788575;font-size:8px;line-height:1.35}
+    #${SECTION_ID} .gbgb-design-price{display:block;margin:5px 3px 3px;color:#986d27;font-size:9px;font-weight:850}
+    #${SECTION_ID} .gbgb-design-price-note{margin:9px 2px 0;color:#8a806a;font-size:9px;line-height:1.5}
     #${SECTION_ID} .gbgb-config{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin:0 0 19px}
     #${SECTION_ID} .gbgb-config-card{min-width:0;padding:13px 14px;border:1px solid #e5e9dc;border-radius:14px;background:rgba(255,255,255,.88)}
     #${SECTION_ID} .gbgb-label{display:block;margin-bottom:9px;color:#657164;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
@@ -76,9 +112,9 @@
     #${SECTION_ID} .gbgb-note{margin:9px 0 0;color:#889184;font-size:9px;line-height:1.5}
     #${SECTION_ID} .gbgb-loading{grid-column:1/-1;padding:24px;text-align:center;color:#708070;font-size:12px}
     #${SECTION_ID} .gbgb-error{grid-column:1/-1;padding:18px;border:1px solid #f0d4ce;border-radius:12px;background:#fff7f5;color:#8d3b2d;font-size:12px}
-    @media(max-width:1050px){#${SECTION_ID} .gbgb-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-    @media(max-width:760px){#${SECTION_ID}{width:calc(100% - 28px);margin:27px auto 38px;padding:17px;border-radius:18px}#${SECTION_ID} .gbgb-head{align-items:flex-start;flex-direction:column;gap:10px}#${SECTION_ID} .gbgb-config{grid-template-columns:1fr 1fr}#${SECTION_ID} .gbgb-config-card:last-child{grid-column:1/-1}#${SECTION_ID} .gbgb-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#${SECTION_ID} .gbgb-bottom{grid-template-columns:1fr}}
-    @media(max-width:480px){#${SECTION_ID} .gbgb-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#${SECTION_ID} .gbgb-select{min-height:151px;padding:8px}#${SECTION_ID} .gbgb-product-image-wrap,#${SECTION_ID} .gbgb-product-image,#${SECTION_ID} .gbgb-emoji{height:57px}#${SECTION_ID} .gbgb-product.is-selected .gbgb-product-image{height:70px}#${SECTION_ID} .gbgb-config{grid-template-columns:1fr}#${SECTION_ID} .gbgb-config-card:last-child{grid-column:auto}#${SECTION_ID} .gbgb-tools{align-items:flex-start;flex-direction:column}}
+    @media(max-width:1050px){#${SECTION_ID} .gbgb-grid{grid-template-columns:repeat(4,minmax(0,1fr))}#${SECTION_ID} .gbgb-design-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    @media(max-width:760px){#${SECTION_ID}{width:calc(100% - 28px);margin:27px auto 38px;padding:17px;border-radius:18px}#${SECTION_ID} .gbgb-head{align-items:flex-start;flex-direction:column;gap:10px}#${SECTION_ID} .gbgb-config{grid-template-columns:1fr 1fr}#${SECTION_ID} .gbgb-config-card:last-child{grid-column:1/-1}#${SECTION_ID} .gbgb-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#${SECTION_ID} .gbgb-design-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#${SECTION_ID} .gbgb-bottom{grid-template-columns:1fr}}
+    @media(max-width:480px){#${SECTION_ID} .gbgb-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#${SECTION_ID} .gbgb-design-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#${SECTION_ID} .gbgb-design-head{align-items:flex-start;flex-direction:column}#${SECTION_ID} .gbgb-select{min-height:151px;padding:8px}#${SECTION_ID} .gbgb-product-image-wrap,#${SECTION_ID} .gbgb-product-image,#${SECTION_ID} .gbgb-emoji{height:57px}#${SECTION_ID} .gbgb-product.is-selected .gbgb-product-image{height:70px}#${SECTION_ID} .gbgb-config{grid-template-columns:1fr}#${SECTION_ID} .gbgb-config-card:last-child{grid-column:auto}#${SECTION_ID} .gbgb-tools{align-items:flex-start;flex-direction:column}}
     @media(prefers-reduced-motion:reduce){#${SECTION_ID} .gbgb-product,#${SECTION_ID} .gbgb-product-image,#${SECTION_ID} .gbgb-emoji{transition:none}}
 
     #${MODAL_ID}{position:fixed;inset:0;z-index:11000;display:none;align-items:center;justify-content:center;padding:14px;font-family:inherit}
@@ -145,6 +181,15 @@
         <span class="gbgb-count-pill" id="gbgb-selected-count">0 products selected</span>
       </header>
 
+      <section class="gbgb-design-picker" aria-labelledby="gbgb-design-title">
+        <div class="gbgb-design-head">
+          <div><strong id="gbgb-design-title">Choose your gift box design</strong><small>20 different GB Mountain box styles. Tap a design to select it; the selected design grows slightly.</small></div>
+          <span class="gbgb-design-current" id="gbgb-design-current">Selected: Emerald Gold</span>
+        </div>
+        <div class="gbgb-design-grid" id="gbgb-design-grid" aria-label="20 gift box designs"></div>
+        <p class="gbgb-design-price-note">Gift box packaging prices are not yet in your catalogue, so each design is marked “Price on request”. We will not show the sample prices printed in the concept image as real prices.</p>
+      </section>
+
       <div class="gbgb-config">
         <div class="gbgb-config-card">
           <span class="gbgb-label">1 · Choose box size</span>
@@ -186,6 +231,7 @@
         </section>
         <section class="gbgb-total">
           <h3>Gift box summary</h3>
+          <div class="gbgb-total-line"><span>Gift box design</span><strong id="gbgb-total-design">Emerald Gold</strong></div>
           <div class="gbgb-total-line"><span>Box size</span><strong id="gbgb-total-size">Small</strong></div>
           <div class="gbgb-total-line"><span>Selected products</span><strong id="gbgb-total-count">0</strong></div>
           <div class="gbgb-total-line"><span>Known items total</span><strong id="gbgb-total-price">Rs. 0</strong></div>
@@ -199,11 +245,13 @@
     anchor.insertAdjacentElement("afterend", section);
 
     const grid = section.querySelector("#gbgb-product-grid");
+    const designGrid = section.querySelector("#gbgb-design-grid");
     const budgetPreset = section.querySelector("#gbgb-budget-preset");
     const budgetCustom = section.querySelector("#gbgb-budget-custom");
     const selected = new Map();
     let products = [];
     let boxSize = "Small";
+    let selectedDesign = GIFT_DESIGNS[0];
 
     const budget = () => {
       const raw = budgetPreset.value === "custom" ? budgetCustom.value : budgetPreset.value;
@@ -213,6 +261,34 @@
     const selectedItems = () => products.filter((p) => selected.has(String(p.id))).map((p) => ({ product: p, qty: selected.get(String(p.id)) }));
     const subtotal = () => selectedItems().reduce((sum, item) => sum + (Number.isFinite(Number(item.product.price)) && item.product.price !== null && item.product.price !== "" ? Number(item.product.price) * item.qty : 0), 0);
     const hasQuoteItems = () => selectedItems().some(({product}) => product.price === null || product.price === undefined || product.price === "");
+
+    function renderDesigns() {
+      designGrid.innerHTML = GIFT_DESIGNS.map((design, index) => {
+        const col = index % 5;
+        const row = Math.floor(index / 5);
+        const x = col * 25;
+        const y = row * (100 / 3);
+        const isSelected = design.id === selectedDesign.id;
+        return `<button class="gbgb-design-card ${isSelected ? "is-selected" : ""}" type="button" data-gift-design="${design.id}" aria-pressed="${isSelected}" aria-label="Select gift box design ${index + 1}: ${escapeHtml(design.name)}">
+          <span class="gbgb-design-photo" role="img" aria-label="${escapeHtml(design.name)} gift box" style="background-position:${x}% ${y}%"></span>
+          <span class="gbgb-design-name">${String(index + 1).padStart(2, "0")}. ${escapeHtml(design.name)}</span>
+          <span class="gbgb-design-finish">${escapeHtml(design.finish)}</span>
+          <span class="gbgb-design-price">Packaging: Price on request</span>
+        </button>`;
+      }).join("");
+      section.querySelector("#gbgb-design-current").textContent = `Selected: ${selectedDesign.name}`;
+    }
+
+    designGrid.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-gift-design]");
+      if (!button) return;
+      const designId = Number(button.dataset.giftDesign);
+      const nextDesign = GIFT_DESIGNS.find((design) => design.id === designId);
+      if (!nextDesign) return;
+      selectedDesign = nextDesign;
+      renderDesigns();
+      updateSummary();
+    });
 
     function renderProducts() {
       if (!products.length) {
@@ -248,6 +324,7 @@
       const budgetValue = budget();
       section.querySelector("#gbgb-selected-count").textContent = `${selectedCount} product${selectedCount === 1 ? "" : "s"} selected`;
       section.querySelector("#gbgb-total-size").textContent = boxSize;
+      section.querySelector("#gbgb-total-design").textContent = selectedDesign.name;
       section.querySelector("#gbgb-total-count").textContent = String(selectedCount);
       section.querySelector("#gbgb-total-price").textContent = money(knownTotal) + (hasQuoteItems() ? " + quote" : "");
       section.querySelector("#gbgb-total-budget").textContent = budgetValue ? money(budgetValue) : "Enter a valid budget";
@@ -355,7 +432,7 @@
       const recipient = clean(section.querySelector("#gbgb-recipient").value) || "Not specified";
       const message = clean(section.querySelector("#gbgb-message").value) || "Not specified";
       const summary = items.map(({product, qty}) => `${escapeHtml(product.name)} × ${qty}`).join(" · ");
-      modal.querySelector("#gbgb-modal-summary").innerHTML = `<strong>${boxSize} gift box</strong><br>Recipient: ${escapeHtml(recipient)}<br>${summary}<br><strong>Known items total: ${money(subtotal())}${hasQuoteItems() ? " + prices to confirm" : ""}</strong><br>Gift budget: ${money(budget())}<br>Gift message: ${escapeHtml(message)}`;
+      modal.querySelector("#gbgb-modal-summary").innerHTML = `<strong>${boxSize} gift box · ${escapeHtml(selectedDesign.name)}</strong><br>Packaging price: Price on request<br>Recipient: ${escapeHtml(recipient)}<br>${summary}<br><strong>Known items total: ${money(subtotal())}${hasQuoteItems() ? " + prices to confirm" : ""}</strong><br>Gift budget: ${money(budget())}<br>Gift message: ${escapeHtml(message)}`;
       modal.querySelector("#gbgb-recipient-message").value = message === "Not specified" ? "" : message;
       modal.classList.add("is-open");
       document.body.style.overflow = "hidden";
@@ -392,6 +469,8 @@
         "Assalam-o-Alaikum GB Dry Fruit! I would like to request a custom Mountain Gift Box.",
         "",
         `Box size: ${boxSize}`,
+        `Gift box design: ${selectedDesign.name} (Design ${String(selectedDesign.id).padStart(2, "0")})`,
+        "Gift box packaging price: Price on request — please confirm.",
         `Recipient: ${recipient}`,
         `Gift budget: ${money(budget())}`,
         "Selected products:",
@@ -435,6 +514,8 @@
         grid.innerHTML = `<div class="gbgb-error">The product list could not load. Please refresh the page and try again.</div>`;
       }
     }
+    renderDesigns();
+    updateSummary();
     loadCatalogue();
   }
 
