@@ -538,3 +538,19 @@ body {
 .category-button {
   transition: all .25s ease;
 }
+
+/* Gilgit-Baltistan Mountain Background */
+.hero {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(10, 35, 25, 0.88),
+            rgba(10, 35, 25, 0.48)
+        ),
+        url("gb-mountains.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
