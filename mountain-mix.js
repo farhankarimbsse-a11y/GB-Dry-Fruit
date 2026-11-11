@@ -1,6 +1,7 @@
-/* GB Dry Fruit — Mountain Mix Lab
-   A budget-based WhatsApp request builder. It intentionally does not promise
-   gram weights because catalogue pack sizes/pricing units must be confirmed. */
+/* GB Dry Fruit — Mountain Mix Lab (all catalogue products)
+   Loads every product from products.json. Customers choose any combination
+   and set a target budget. Equal budget shares are a preference only; the
+   shop confirms available weights and final quote on WhatsApp. */
 (() => {
   "use strict";
 
@@ -8,7 +9,8 @@
   const BUDGET_MIN = 100;
   const BUDGET_MAX = 50000;
   const DEFAULT_BUDGET = 1000;
-  const DEFAULT_BADAM_SHARE = 50;
+  const DEFAULT_SELECTED_IDS = [1, 3]; // Keep the original Badam + Pista starter mix.
+
   const money = (value) => `Rs. ${Math.round(Number(value) || 0).toLocaleString("en-PK")}`;
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -16,7 +18,7 @@
 
   const styles = `
     .mountain-mix-section{width:min(1440px,calc(100% - 64px));margin:34px auto 42px;padding:clamp(20px,3vw,38px);border:1px solid #e8e5d9;border-radius:22px;background:linear-gradient(125deg,#f5f7ed 0%,#fffaf0 58%,#f1f5e9 100%);box-shadow:0 14px 38px rgba(34,48,34,.06)}
-    .mountain-mix-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.95fr);gap:clamp(22px,4vw,54px);align-items:center}
+    .mountain-mix-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.95fr);gap:clamp(22px,4vw,54px);align-items:start}
     .mountain-mix-copy .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#16833b;font-size:10px;letter-spacing:.14em;font-weight:800;text-transform:uppercase}
     .mountain-mix-copy h2{margin:13px 0 12px;color:#24392a;font-family:'Playfair Display',Georgia,serif;font-size:clamp(29px,4vw,45px);line-height:1.12;letter-spacing:-.7px}
     .mountain-mix-copy h2 em{color:#16833b;font-style:normal}
@@ -24,35 +26,39 @@
     .mountain-mix-perks{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
     .mountain-mix-perks span{padding:8px 11px;border:1px solid #e2e8d7;border-radius:30px;background:rgba(255,255,255,.76);color:#476148;font-size:11px;font-weight:700}
     .mountain-mix-card{padding:clamp(16px,2.5vw,25px);border:1px solid #e7e2d2;border-radius:18px;background:#fff;box-shadow:0 16px 35px rgba(55,65,43,.09)}
-    .mountain-mix-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+    .mountain-mix-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
     .mountain-mix-card-head h3{margin:0;color:#24392a;font-size:17px}
-    .mountain-mix-card-head span{padding:6px 9px;border-radius:20px;background:#edf6eb;color:#16833b;font-size:10px;font-weight:800;white-space:nowrap}
-    .mountain-mix-ingredients{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .mountain-mix-ingredient{position:relative;display:flex;align-items:center;gap:10px;min-width:0;padding:10px;border:1px solid #e8e8df;border-radius:13px;background:#fff;cursor:pointer;transition:border-color .18s,background .18s,box-shadow .18s}
+    .mountain-mix-card-head>span{padding:6px 9px;border-radius:20px;background:#edf6eb;color:#16833b;font-size:10px;font-weight:800;white-space:nowrap}
+    .mountain-mix-selection-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px;color:#687468;font-size:10px}
+    .mountain-mix-selection-tools{display:flex;gap:7px;flex-wrap:wrap}
+    .mountain-mix-selection-tools button{padding:6px 9px;border:1px solid #dfe8dc;border-radius:20px;background:#f8fbf5;color:#27653a;font-size:10px;font-weight:800;cursor:pointer}
+    .mountain-mix-selection-tools button:hover{background:#edf6eb}
+    .mountain-mix-ingredients{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;max-height:430px;overflow:auto;padding:2px 4px 2px 1px;scrollbar-width:thin}
+    .mountain-mix-ingredient{position:relative;display:flex;align-items:center;gap:9px;min-width:0;min-height:72px;padding:9px;border:1px solid #e8e8df;border-radius:12px;background:#fff;cursor:pointer;transition:border-color .18s,background .18s,box-shadow .18s}
+    .mountain-mix-ingredient:hover{border-color:#a9c9a8}
     .mountain-mix-ingredient.is-selected{border-color:#16833b;background:#f4faf1;box-shadow:0 0 0 2px rgba(22,131,59,.08)}
-    .mountain-mix-ingredient input{position:absolute;opacity:0;pointer-events:none}
-    .mountain-mix-ingredient img{width:52px;height:52px;object-fit:contain;flex:none;border-radius:10px;background:#f8f5ec}
-    .mountain-mix-ingredient-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
-    .mountain-mix-ingredient-copy strong{font-size:12px;color:#253a2a;line-height:1.25}
-    .mountain-mix-ingredient-copy small{font-size:10px;line-height:1.35;color:#81897d}
-    .mountain-mix-check{margin-left:auto;color:#16833b;font-size:18px;opacity:0;flex:none}
+    .mountain-mix-ingredient input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+    .mountain-mix-ingredient img{width:43px;height:43px;object-fit:contain;flex:none;border-radius:9px;background:#f8f5ec}
+    .mountain-mix-ingredient-emoji{display:grid;place-items:center;width:43px;height:43px;flex:none;border-radius:9px;background:#f8f5ec;font-size:23px}
+    .mountain-mix-ingredient-copy{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+    .mountain-mix-ingredient-copy strong{font-size:11px;color:#253a2a;line-height:1.3;overflow-wrap:anywhere}
+    .mountain-mix-ingredient-copy small{font-size:9px;line-height:1.35;color:#81897d}
+    .mountain-mix-check{margin-left:auto;color:#16833b;font-size:17px;opacity:0;flex:none}
     .mountain-mix-ingredient.is-selected .mountain-mix-check{opacity:1}
-    .mountain-mix-budget-row{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:20px 0 13px}
+    .mountain-mix-budget-row{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:18px 0 12px}
     .mountain-mix-budget-row label{display:block;color:#596659;font-size:11px;font-weight:700}
     .mountain-mix-budget-input{display:flex;align-items:center;gap:7px;margin-top:6px;padding:9px 11px;border:1px solid #dfe5d8;border-radius:9px;background:#fbfcf8}
     .mountain-mix-budget-input span{color:#16833b;font-weight:800}
     .mountain-mix-budget-input input{width:116px;min-width:0;border:0;outline:0;background:transparent;color:#203b26;font-size:19px;font-weight:800}
     .mountain-mix-budget-hint{max-width:145px;text-align:right;color:#8a9186;font-size:10px;line-height:1.45}
     .mountain-mix-split{padding:13px 14px;border-radius:12px;background:#f7f8f3;border:1px solid #edf0e8}
-    .mountain-mix-split-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;color:#445445;font-size:11px;font-weight:800}
-    .mountain-mix-split input[type=range]{width:100%;accent-color:#16833b;cursor:pointer}
-    .mountain-mix-split-ends{display:flex;justify-content:space-between;gap:10px;color:#7c877a;font-size:10px}
-    .mountain-mix-allocation{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
-    .mountain-mix-allocation div{padding:10px;border:1px solid #e7ecdf;border-radius:10px;background:#fff}
-    .mountain-mix-allocation small{display:block;color:#7e887d;font-size:10px}
-    .mountain-mix-allocation strong{display:block;margin-top:4px;color:#1c6d35;font-size:16px}
+    .mountain-mix-split-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px;color:#445445;font-size:11px;font-weight:800}
+    .mountain-mix-allocation{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-top:10px}
+    .mountain-mix-allocation div{min-width:0;padding:9px;border:1px solid #e7ecdf;border-radius:10px;background:#fff}
+    .mountain-mix-allocation small{display:block;color:#7e887d;font-size:9px;line-height:1.35;overflow-wrap:anywhere}
+    .mountain-mix-allocation strong{display:block;margin-top:4px;color:#1c6d35;font-size:14px}
     .mountain-mix-warning{margin:12px 0 0;padding:10px 11px;border-left:3px solid #d6a34a;border-radius:7px;background:#fffaf0;color:#786743;font-size:10px;line-height:1.55}
-    .mountain-mix-preview{margin-top:14px;padding-top:13px;border-top:1px solid #edf0e8;color:#526052;font-size:11px;line-height:1.55}
+    .mountain-mix-preview{margin-top:14px;padding-top:13px;border-top:1px solid #edf0e8;color:#526052;font-size:11px;line-height:1.6}
     .mountain-mix-preview strong{color:#24392a}
     .mountain-mix-actions{display:flex;flex-direction:column;gap:9px;margin-top:15px}
     .mountain-mix-submit{width:100%;min-height:47px;border:0;border-radius:9px;background:#16833b;color:#fff;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 8px 17px rgba(22,131,59,.16);transition:background .18s,transform .18s}
@@ -60,8 +66,9 @@
     .mountain-mix-submit:disabled{opacity:.45;cursor:not-allowed}
     .mountain-mix-browse{align-self:center;color:#16833b;font-size:11px;font-weight:800;text-decoration:none}
     .mountain-mix-browse:hover{text-decoration:underline}
-    @media(max-width:760px){.mountain-mix-section{width:calc(100% - 28px);margin:25px auto 32px;padding:18px;border-radius:16px}.mountain-mix-layout{grid-template-columns:1fr;gap:20px}.mountain-mix-copy h2{font-size:31px}.mountain-mix-copy>p{font-size:12px}.mountain-mix-card{padding:15px}}
-    @media(max-width:390px){.mountain-mix-ingredients{grid-template-columns:1fr}.mountain-mix-ingredient img{width:46px;height:46px}.mountain-mix-budget-input input{width:92px}.mountain-mix-budget-hint{max-width:115px}}
+    @media(max-width:900px){.mountain-mix-layout{grid-template-columns:1fr}.mountain-mix-copy>p{max-width:720px}}
+    @media(max-width:600px){.mountain-mix-section{width:calc(100% - 28px);margin:25px auto 32px;padding:16px;border-radius:16px}.mountain-mix-layout{gap:18px}.mountain-mix-copy h2{font-size:31px}.mountain-mix-copy>p{font-size:12px}.mountain-mix-card{padding:13px}.mountain-mix-ingredients{grid-template-columns:repeat(2,minmax(0,1fr));max-height:390px}.mountain-mix-ingredient{gap:7px;padding:8px}.mountain-mix-ingredient img,.mountain-mix-ingredient-emoji{width:36px;height:36px}.mountain-mix-ingredient-copy strong{font-size:10px}.mountain-mix-ingredient-copy small{font-size:8px}}
+    @media(max-width:380px){.mountain-mix-ingredients{grid-template-columns:1fr}.mountain-mix-budget-input input{width:92px}.mountain-mix-budget-hint{max-width:115px}}
   `;
 
   function init() {
@@ -83,14 +90,20 @@
         <div class="mountain-mix-copy">
           <span class="eyebrow">✦ ONLY AT GB DRY FRUIT</span>
           <h2 id="mountain-mix-title">Build your own <em>Mountain Mix.</em></h2>
-          <p>Choose your favourite mountain treats, set a budget and tell us how you would like it split. We will confirm the exact mix weight and final quote with you on WhatsApp before packing.</p>
-          <div class="mountain-mix-perks"><span>✦ Your ingredients</span><span>₨ Your budget</span><span>♡ Made for you</span></div>
+          <p>Choose any favourites from our full catalogue, set your budget and create a mix that feels like yours. We will confirm the exact mix weight and final quote with you on WhatsApp before packing.</p>
+          <div class="mountain-mix-perks"><span>✦ Full product catalogue</span><span>₨ Your budget</span><span>♡ Made for you</span></div>
         </div>
         <div class="mountain-mix-card">
           <div class="mountain-mix-card-head"><h3>Create your custom blend</h3><span>YOUR MIX LAB</span></div>
-          <div class="mountain-mix-ingredients" id="mountain-mix-ingredients" aria-label="Choose ingredients">
-            <div class="mountain-mix-ingredient is-selected"><span>🥜</span><span class="mountain-mix-ingredient-copy"><strong>Loading Badam…</strong><small>Catalogue details loading</small></span></div>
-            <div class="mountain-mix-ingredient is-selected"><span>💚</span><span class="mountain-mix-ingredient-copy"><strong>Loading Pista…</strong><small>Catalogue details loading</small></span></div>
+          <div class="mountain-mix-selection-bar">
+            <span id="mountain-mix-count">Choose any ingredients</span>
+            <div class="mountain-mix-selection-tools">
+              <button id="mountain-mix-select-all" type="button">Select all</button>
+              <button id="mountain-mix-clear" type="button">Clear</button>
+            </div>
+          </div>
+          <div class="mountain-mix-ingredients" id="mountain-mix-ingredients" aria-label="Choose from all products">
+            <p style="grid-column:1/-1;color:#788078;font-size:12px">Loading the full product catalogue…</p>
           </div>
           <div class="mountain-mix-budget-row">
             <label for="mountain-mix-budget">Your mix budget
@@ -99,15 +112,13 @@
             <span class="mountain-mix-budget-hint">Product mix budget<br/>Delivery is separate</span>
           </div>
           <div class="mountain-mix-split">
-            <div class="mountain-mix-split-head"><label for="mountain-mix-ratio">Budget preference</label><span id="mountain-mix-ratio-label">50% / 50%</span></div>
-            <input id="mountain-mix-ratio" type="range" min="10" max="90" step="5" value="${DEFAULT_BADAM_SHARE}" aria-label="Budget share for Badam" />
-            <div class="mountain-mix-split-ends"><span>More Badam</span><span>More Pista</span></div>
-            <div class="mountain-mix-allocation" aria-live="polite">
-              <div><small id="mountain-mix-badam-label">Badam preference</small><strong id="mountain-mix-badam-amount">Rs. 500</strong></div>
-              <div><small id="mountain-mix-pista-label">Pista preference</small><strong id="mountain-mix-pista-amount">Rs. 500</strong></div>
+            <div class="mountain-mix-split-head"><span>Preferred budget allocation</span><span id="mountain-mix-allocation-label">Split evenly</span></div>
+            <div class="mountain-mix-allocation" id="mountain-mix-allocation" aria-live="polite">
+              <div><small>Badam</small><strong>Rs. 500</strong></div>
+              <div><small>Pista</small><strong>Rs. 500</strong></div>
             </div>
           </div>
-          <p class="mountain-mix-warning">This is your preferred budget split, not a confirmed gram/weight quote. We will confirm available quantities and the final mix price on WhatsApp.</p>
+          <p class="mountain-mix-warning">Budget is divided evenly among your selected ingredients as a preference only. It is not a confirmed gram/weight quote. We will confirm available quantities and the final mix price on WhatsApp.</p>
           <div class="mountain-mix-preview" id="mountain-mix-preview" aria-live="polite"><strong>Your mix:</strong> Badam + Pista · <strong>Budget:</strong> Rs. 1,000</div>
           <div class="mountain-mix-actions">
             <button class="mountain-mix-submit" id="mountain-mix-whatsapp" type="button" disabled>Request my Mountain Mix on WhatsApp ↗</button>
@@ -119,9 +130,14 @@
 
     const ingredientsRoot = section.querySelector("#mountain-mix-ingredients");
     const budgetInput = section.querySelector("#mountain-mix-budget");
-    const ratioInput = section.querySelector("#mountain-mix-ratio");
     const whatsappButton = section.querySelector("#mountain-mix-whatsapp");
     const preview = section.querySelector("#mountain-mix-preview");
+    const allocationRoot = section.querySelector("#mountain-mix-allocation");
+    const allocationLabel = section.querySelector("#mountain-mix-allocation-label");
+    const countLabel = section.querySelector("#mountain-mix-count");
+    const selectAllButton = section.querySelector("#mountain-mix-select-all");
+    const clearButton = section.querySelector("#mountain-mix-clear");
+
     let ingredientProducts = [];
     let catalogueError = false;
 
@@ -141,77 +157,80 @@
       const selected = selectedProducts();
       const budget = getBudget();
       if (!budget || selected.length === 0) return { selected, budget, shares: [] };
-      if (selected.length === 1) return { selected, budget, shares: [{ product: selected[0], amount: budget, percent: 100 }] };
-      const firstPercent = Number(ratioInput.value);
-      const firstAmount = Math.round(budget * firstPercent / 100);
-      return { selected, budget, shares: [
-        { product: selected[0], amount: firstAmount, percent: firstPercent },
-        { product: selected[1], amount: budget - firstAmount, percent: 100 - firstPercent }
-      ] };
+      const baseShare = Math.floor(budget / selected.length);
+      const remainder = budget - baseShare * selected.length;
+      const shares = selected.map((product, index) => ({
+        product,
+        amount: baseShare + (index < remainder ? 1 : 0)
+      }));
+      return { selected, budget, shares };
     }
 
     function updateIngredientCards() {
-      const selectedIds = new Set(selectedProducts().map((product) => Number(product.id)));
       ingredientsRoot.querySelectorAll(".mountain-mix-ingredient").forEach((card) => {
-        const input = card.querySelector("input");
-        const selected = Boolean(input && selectedIds.has(Number(input.dataset.mixId)));
-        card.classList.toggle("is-selected", selected);
-        if (input) input.checked = selected;
+        const input = card.querySelector("input[data-mix-id]");
+        card.classList.toggle("is-selected", Boolean(input && input.checked));
       });
     }
 
     function updateBuilder() {
       const data = allocation();
-      const [badamShare, pistaShare] = data.shares;
-      const bothSelected = data.selected.length === 2;
-      ratioInput.disabled = !bothSelected;
-      section.querySelector(".mountain-mix-split").style.opacity = bothSelected ? "1" : ".72";
-      section.querySelector("#mountain-mix-ratio-label").textContent = bothSelected
-        ? `${badamShare.percent}% / ${pistaShare.percent}%`
-        : data.selected.length === 1 ? "100% for selected item" : "Choose an ingredient";
-      section.querySelector("#mountain-mix-badam-label").textContent = badamShare ? `${badamShare.product.name} preference` : "First ingredient";
-      section.querySelector("#mountain-mix-pista-label").textContent = pistaShare ? `${pistaShare.product.name} preference` : "Second ingredient";
-      section.querySelector("#mountain-mix-badam-amount").textContent = badamShare ? money(badamShare.amount) : "—";
-      section.querySelector("#mountain-mix-pista-amount").textContent = pistaShare ? money(pistaShare.amount) : "—";
+      countLabel.textContent = `${data.selected.length} of ${ingredientProducts.length} ingredients selected`;
+      allocationLabel.textContent = data.selected.length > 1 ? `Split across ${data.selected.length} items` : data.selected.length === 1 ? "All for one item" : "Select ingredients";
 
       if (!data.selected.length) {
-        preview.innerHTML = "<strong>Your mix:</strong> Select Badam, Pista or both to continue.";
+        allocationRoot.innerHTML = "<div style='grid-column:1/-1'><small>No ingredients selected yet</small><strong>Choose at least one product</strong></div>";
+        preview.innerHTML = "<strong>Your mix:</strong> Select one or more ingredients to continue.";
       } else if (!data.budget) {
-        preview.innerHTML = `<strong>Your mix:</strong> ${data.selected.map((p) => escapeHtml(p.name)).join(" + ")} · <strong>Enter a budget from ${money(BUDGET_MIN)} to ${money(BUDGET_MAX)}.</strong>`;
+        allocationRoot.innerHTML = "<div style='grid-column:1/-1'><small>Budget required</small><strong>Enter Rs. 100 to Rs. 50,000</strong></div>";
+        preview.innerHTML = `<strong>Your mix:</strong> ${data.selected.map((product) => escapeHtml(product.name)).join(" + ")} · <strong>Enter a budget from ${money(BUDGET_MIN)} to ${money(BUDGET_MAX)}.</strong>`;
       } else {
-        preview.innerHTML = `<strong>Your mix:</strong> ${data.selected.map((p) => escapeHtml(p.name)).join(" + ")} · <strong>Budget:</strong> ${money(data.budget)}`;
+        allocationRoot.innerHTML = data.shares.map((share) => `
+          <div><small>${escapeHtml(share.product.name)}</small><strong>${money(share.amount)}</strong></div>
+        `).join("");
+        preview.innerHTML = `<strong>Your mix (${data.selected.length} ingredients):</strong> ${data.selected.map((product) => escapeHtml(product.name)).join(" + ")} · <strong>Budget:</strong> ${money(data.budget)}`;
       }
       whatsappButton.disabled = catalogueError || !data.selected.length || !data.budget;
     }
 
     function renderIngredientCards() {
+      const initiallySelected = new Set(DEFAULT_SELECTED_IDS);
+      if (!ingredientProducts.some((product) => initiallySelected.has(Number(product.id)))) {
+        ingredientProducts.slice(0, 2).forEach((product) => initiallySelected.add(Number(product.id)));
+      }
+
       ingredientsRoot.innerHTML = ingredientProducts.map((product) => {
-        const image = product.image ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy" />` : `<span aria-hidden="true">${escapeHtml(product.emoji || "🥜")}</span>`;
-        const detail = `${product.weight || "Pack size to confirm"} · ${product.price == null ? "Price on request" : money(product.price)}`;
-        return `<label class="mountain-mix-ingredient is-selected">
-          <input type="checkbox" data-mix-id="${Number(product.id)}" checked />
+        const selected = initiallySelected.has(Number(product.id));
+        const image = product.image
+          ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy" />`
+          : `<span class="mountain-mix-ingredient-emoji" aria-hidden="true">${escapeHtml(product.emoji || "🥜")}</span>`;
+        const detail = [product.category, product.weight || "Pack size to confirm", product.price == null ? "Price on request" : money(product.price)].filter(Boolean).join(" · ");
+        return `<label class="mountain-mix-ingredient${selected ? " is-selected" : ""}">
+          <input type="checkbox" data-mix-id="${Number(product.id)}" ${selected ? "checked" : ""} />
           ${image}
           <span class="mountain-mix-ingredient-copy"><strong>${escapeHtml(product.name)}</strong><small>${escapeHtml(detail)}</small></span>
           <span class="mountain-mix-check" aria-hidden="true">✓</span>
         </label>`;
       }).join("");
-      ingredientsRoot.addEventListener("change", updateBuilder);
-      ingredientsRoot.addEventListener("change", updateIngredientCards);
       updateBuilder();
     }
 
     function requestMix() {
       const data = allocation();
       if (!data.selected.length || !data.budget) return;
-      const shareLines = data.shares.map((share) => `• ${share.product.name}: preferred budget share ${money(share.amount)} (${share.percent}%)`).join("\n");
+      const shareLines = data.shares.map((share) => {
+        const listedPrice = share.product.price == null ? "Price on request" : money(share.product.price);
+        const pack = share.product.weight || "Pack size to confirm";
+        return `• ${share.product.name}: preferred budget share ${money(share.amount)} | listed price: ${listedPrice} | pack: ${pack}`;
+      }).join("\n");
       const message = [
         "Assalam-o-Alaikum GB Dry Fruit! I would like to request a custom Mountain Mix.",
         "",
         `Target mix budget (delivery separate): ${money(data.budget)}`,
-        "Selected ingredients and preferred budget split:",
+        `Selected ingredients (${data.selected.length}):`,
         shareLines,
         "",
-        "Please suggest the exact available grams/weights for this budget and confirm the final mix price before packing.",
+        "The budget shares are my preference only. Please suggest the exact available grams/weights and confirm the final mix price before packing.",
         "Thank you!"
       ].join("\n");
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -219,27 +238,46 @@
       if (!win) window.location.href = url;
     }
 
-    ingredientsRoot.innerHTML = "<p style='grid-column:1/-1;color:#788078;font-size:12px'>Loading the latest Badam and Pista details…</p>";
     fetch("./products.json", { cache: "no-store" })
       .then((response) => {
         if (!response.ok) throw new Error(`Catalogue request failed (${response.status})`);
         return response.json();
       })
       .then((catalogue) => {
-        const wanted = [1, 3];
-        ingredientProducts = wanted.map((id) => catalogue.find((product) => Number(product.id) === id)).filter(Boolean);
-        if (ingredientProducts.length !== 2) throw new Error("Badam or Pista is missing from products.json");
+        if (!Array.isArray(catalogue)) throw new Error("Product catalogue has an unexpected format");
+        ingredientProducts = catalogue
+          .filter((product) => product && Number.isFinite(Number(product.id)) && product.name)
+          .sort((a, b) => Number(a.featured ?? a.id) - Number(b.featured ?? b.id));
+        if (!ingredientProducts.length) throw new Error("No products were found in products.json");
         renderIngredientCards();
       })
       .catch((error) => {
         console.error("Mountain Mix Lab could not load catalogue:", error);
         catalogueError = true;
-        ingredientsRoot.innerHTML = "<p style='grid-column:1/-1;color:#9b4c35;font-size:12px'>We could not load Badam and Pista right now. Please refresh the page.</p>";
+        ingredientsRoot.innerHTML = "<p style='grid-column:1/-1;color:#9b4c35;font-size:12px'>We could not load the product catalogue right now. Please refresh the page or browse the shop.</p>";
         updateBuilder();
       });
 
+    ingredientsRoot.addEventListener("change", (event) => {
+      if (event.target && event.target.matches("input[data-mix-id]")) {
+        updateIngredientCards();
+        updateBuilder();
+      }
+    });
+
+    selectAllButton.addEventListener("click", () => {
+      ingredientsRoot.querySelectorAll("input[data-mix-id]").forEach((input) => { input.checked = true; });
+      updateIngredientCards();
+      updateBuilder();
+    });
+
+    clearButton.addEventListener("click", () => {
+      ingredientsRoot.querySelectorAll("input[data-mix-id]").forEach((input) => { input.checked = false; });
+      updateIngredientCards();
+      updateBuilder();
+    });
+
     budgetInput.addEventListener("input", updateBuilder);
-    ratioInput.addEventListener("input", updateBuilder);
     whatsappButton.addEventListener("click", requestMix);
   }
 
