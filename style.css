@@ -553,3 +553,181 @@ body {
     color: #ffffff;
 }
 
+
+
+/* =========================================================
+   GB DRY FRUIT — GILGIT-BALTISTAN MOUNTAIN EDITION
+   Applied as a safe visual layer; store/cart scripts untouched.
+========================================================= */
+:root{
+  --green:#174632;
+  --green-dark:#0c2d20;
+  --green-soft:#e8eee4;
+  --gold:#c79a52;
+  --cream:#f5f0e5;
+  --cream-2:#e9e1d1;
+  --ink:#1c3328;
+  --muted:#718074;
+  --line:#ddd5c4;
+  --white:#fffdf7;
+  --shadow:0 16px 42px rgba(17,43,29,.12);
+}
+body{
+  background:
+    radial-gradient(ellipse at 10% 15%,rgba(199,154,82,.08),transparent 32%),
+    linear-gradient(180deg,#f7f4eb 0%,#f1ecdf 100%);
+  color:var(--ink);
+}
+.announcement-bar{
+  background:#0b2b1e;
+  color:#f6f0e2;
+  border-bottom:1px solid rgba(199,154,82,.55);
+}
+.announcement-bar span{color:#e2bd79}
+.site-header{
+  background:rgba(12,45,32,.97);
+  border-bottom:1px solid #b88b49;
+  box-shadow:0 8px 24px rgba(8,30,20,.14);
+  backdrop-filter:blur(12px);
+}
+.site-header .brand-copy strong{color:#fffdf5}
+.site-header .brand-copy em{color:#e4bd76}
+.site-header .brand-copy small{color:#c7d4c7}
+.site-header .brand-mark svg{filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.site-header .cart-trigger,.site-header .login-link{color:#fff8e9}
+.site-header .cart-trigger b{background:#c99b52;border-color:#103624;color:#102d20}
+.site-header .delivery-pill{border-color:rgba(230,213,174,.35);color:#fff}
+.site-header .delivery-pill small{color:#d3dfd1}
+.site-header .delivery-pill i{color:#e8c47d}
+.site-header .search-box{border-color:#d9cba9;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.site-header .search-box button{background:#bd8e48}
+.site-header .search-box button:hover{background:#a47737}
+.quick-nav{
+  background:#174632;
+  color:#f8f1e3;
+  border-bottom:2px solid #c79a52;
+  box-shadow:0 5px 15px rgba(17,43,29,.08);
+}
+.quick-nav a{color:#e9eee4}
+.quick-nav a:hover,.quick-nav a.active{color:#f0cb82}
+.quick-nav a.active:after{background:#e4bc73}
+.nav-note{color:#d5dfd2}
+.nav-note span{color:#e4bc73}
+
+/* Scenic hero uses the mountain photograph already stored in this repo. */
+.hero{
+  min-height:430px;
+  margin-top:24px;
+  border:1px solid #b98c4b;
+  border-radius:22px;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(7,29,20,.91) 0%,rgba(11,43,29,.78) 39%,rgba(14,48,32,.36) 72%,rgba(10,35,24,.16) 100%),
+    url("./ChatGPT%20Image%20Nov%2011,%202026,%2010_43_28%20AM.png") center 48%/cover no-repeat;
+  box-shadow:0 22px 55px rgba(15,43,28,.2);
+}
+.hero:before{
+  border-color:rgba(245,220,166,.18);
+  box-shadow:0 0 0 35px rgba(255,255,255,.045),0 0 0 75px rgba(255,255,255,.025);
+}
+.hero-content{padding-top:58px;padding-bottom:48px}
+.hero .eyebrow{color:#edc77e}
+.hero .eyebrow>span{background:#e3b96e}
+.hero h1{color:#fffdf6;text-shadow:0 3px 20px rgba(0,0,0,.22)}
+.hero h1 em{color:#e8bf73}
+.hero-content>p{color:#f1eee3;text-shadow:0 1px 8px rgba(0,0,0,.2)}
+.hero .button-green{background:#c2934e;color:#142f21;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.hero .button-green:hover{background:#e0b86f}
+.hero .text-link{color:#f4d69c;border-color:rgba(244,214,156,.55)}
+.hero-proof b{color:#fffdf5}
+.hero-proof small{color:#e0e8dc}
+.hero-proof .proof-icon{background:#f5e8c9;color:#8b632e}
+.hero .hero-stamp{background:#123c2a;border-color:#e3bd76;color:#fff8e9;box-shadow:0 8px 22px rgba(0,0,0,.2)}
+.hero-art.hero-gallery{
+  background:linear-gradient(90deg,rgba(13,44,30,.05),rgba(13,44,30,.18));
+}
+.hero-featured-photo,.hero-floating-product{
+  border-color:rgba(232,207,157,.8);
+  box-shadow:0 20px 48px rgba(0,0,0,.22);
+}
+.hero-featured-photo figcaption{background:rgba(255,253,246,.94)}
+.hero-featured-photo figcaption span{color:#a47a3c}
+.hero-featured-photo figcaption strong{color:#203b2b}
+.hero-floating-product figcaption{color:#244a32}
+
+/* Mountain-inspired woven trim and warm paper surfaces. */
+.trust-strip{
+  background:rgba(255,253,247,.94);
+  border:1px solid #d8c49e;
+  box-shadow:0 9px 26px rgba(25,53,34,.06);
+}
+.trust-icon{background:#e9eee3;color:#24543a}
+.sidebar,.product-card{
+  background:#fffdf7;
+  border-color:#dfd4bd;
+}
+.sidebar{box-shadow:0 8px 24px rgba(28,50,32,.045)}
+.sidebar h2,.filter-heading h3,.top-selling-title{color:#203b2b}
+.category-button:hover,.category-button.selected{
+  background:#edf2e8;border-color:#d1dfca;color:#174632;
+}
+.category-button.selected b{background:#174632}
+.section-heading{border-color:#d9cfbb}
+.section-heading h2,.story-inner h2,.newsletter h2{color:#203b2b}
+.section-heading h2 em,.story-inner h2 em{color:#ad7d3d}
+.product-card{box-shadow:0 7px 22px rgba(23,55,35,.07)}
+.product-card:hover{border-color:#c79a52;box-shadow:0 17px 36px rgba(23,55,35,.14)}
+.product-image{background:linear-gradient(145deg,#f5f0e5,#fffdf7)}
+.product-label{background:#174632;color:#fff8e8}
+.product-category,.product-price{color:#20563a}
+.add-button,.button-green{background:#174632}
+.add-button:hover,.button-green:hover{background:#0c2d20}
+.quantity-control{background:#f0ebdf;border-color:#ded3bd}
+.quantity-control button:hover{background:#174632}
+.story-section{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(110deg,rgba(232,225,208,.97),rgba(246,241,229,.97)),
+    repeating-linear-gradient(45deg,transparent 0 22px,rgba(164,119,57,.08) 23px 25px);
+  border-top:1px solid #c79a52;
+  border-bottom:1px solid #c79a52;
+}
+.story-section:before,.story-section:after{
+  content:"";
+  position:absolute;
+  width:150px;height:150px;
+  border:1px solid rgba(166,122,59,.18);
+  transform:rotate(45deg);
+  pointer-events:none;
+}
+.story-section:before{left:-95px;top:-90px;box-shadow:0 0 0 12px rgba(166,122,59,.035),0 0 0 24px rgba(166,122,59,.025)}
+.story-section:after{right:-95px;bottom:-100px;box-shadow:0 0 0 12px rgba(166,122,59,.035),0 0 0 24px rgba(166,122,59,.025)}
+.story-mark{background:#174632;border:2px solid #c79a52}
+.newsletter{background:transparent}
+.newsletter .eyebrow{color:#9a7138}
+.site-footer{
+  background:#0b2b1e;
+  border-top:3px solid #c79a52;
+}
+.footer-inner .brand-copy strong{color:#fffdf5}
+.footer-inner .brand-copy em{color:#e4bd76}
+.footer-inner .brand-copy small{color:#c7d4c7}
+.checkout-dialog{background:#fffdf7;border-color:#cdb486}
+.delivery-confirm-note{background:#edf1e7}
+.price-disclaimer{background:#f7f1e3;border-color:#e6d5b2;color:#80653c!important}
+.toast{background:#103624}
+.button-light{background:#f1ecdf;border-color:#ded3bd;color:#294333}
+
+@media(max-width:800px){
+  .hero{background-position:58% center}
+  .hero-content{background:linear-gradient(90deg,rgba(7,29,20,.35),transparent)}
+  .hero-art.hero-gallery{background:linear-gradient(180deg,rgba(11,43,29,.06),rgba(11,43,29,.22))}
+}
+@media(max-width:640px){
+  .hero{margin-top:14px;min-height:0;background-position:61% center}
+  .hero-content{padding-top:34px;padding-bottom:26px}
+  .site-header{background:#0c2d20}
+  .quick-nav{background:#174632}
+  .trust-strip{border-radius:12px}
+}
