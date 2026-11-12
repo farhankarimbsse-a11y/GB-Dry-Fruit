@@ -930,3 +930,55 @@ html.motion-ready .hero::after {
 @media (prefers-reduced-motion: reduce) {
   .hero-art::before, html.motion-ready .hero::after { animation: none !important; }
 }
+
+
+/* Gilgit-Baltistan heritage feature */
+.gb-heritage-section{
+  position:relative;
+  overflow:hidden;
+  padding:82px 0 88px;
+  background:
+    radial-gradient(ellipse at 8% 5%,rgba(199,154,82,.13),transparent 34%),
+    linear-gradient(145deg,#f8f5eb 0%,#e9eee4 52%,#f7f1e5 100%);
+  border-top:1px solid #d9c59e;
+  border-bottom:1px solid #d9c59e;
+}
+.gb-heritage-inner{position:relative;z-index:1}
+.gb-heritage-heading{max-width:680px;margin:0 auto 34px;text-align:center}
+.gb-heritage-heading .eyebrow{color:#9a7138}
+.gb-heritage-heading h2{margin:10px 0 12px;color:#203b2b;font-size:clamp(2rem,4vw,3rem);line-height:1.12}
+.gb-heritage-heading h2 em{color:#ad7d3d}
+.gb-heritage-heading>p{max-width:590px;margin:0 auto;color:#5e695d;line-height:1.8}
+.gb-heritage-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.gb-heritage-card{
+  position:relative;min-height:245px;padding:27px 25px 25px;
+  overflow:hidden;border:1px solid rgba(199,154,82,.4);border-radius:18px;
+  background:rgba(255,253,247,.88);
+  box-shadow:0 12px 30px rgba(23,55,35,.07);
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+}
+.gb-heritage-card::after{
+  content:"";position:absolute;width:150px;height:150px;right:-55px;bottom:-70px;
+  border:1px solid rgba(173,125,61,.22);border-radius:50%;
+  box-shadow:0 0 0 12px rgba(173,125,61,.045),0 0 0 25px rgba(173,125,61,.03);
+  pointer-events:none;
+}
+.gb-heritage-card:hover{transform:translateY(-8px);border-color:#c79a52;box-shadow:0 20px 38px rgba(23,55,35,.13)}
+.gb-heritage-symbol{
+  display:grid;place-items:center;width:56px;height:56px;margin-bottom:22px;
+  border:1px solid #e0cfaa;border-radius:16px;background:#f1ead9;
+  font-size:27px;box-shadow:0 5px 14px rgba(23,55,35,.06);
+}
+.gb-heritage-kicker{margin:0 0 7px;color:#a47a3c;font-size:.7rem;font-weight:800;letter-spacing:.16em}
+.gb-heritage-card h3{margin:0 0 9px;color:#203b2b;font-size:1.3rem}
+.gb-heritage-card>p:last-child{max-width:34ch;margin:0;color:#657064;line-height:1.7;font-size:.94rem}
+@media(max-width:760px){
+  .gb-heritage-section{padding:62px 0}
+  .gb-heritage-grid{grid-template-columns:1fr;gap:14px}
+  .gb-heritage-card{min-height:0;padding:23px}
+  .gb-heritage-symbol{margin-bottom:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  .gb-heritage-card{transition:none}
+  .gb-heritage-card:hover{transform:none}
+}
