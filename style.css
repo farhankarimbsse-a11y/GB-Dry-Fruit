@@ -1280,3 +1280,44 @@ html.motion-ready .hero::after {
 @media (prefers-reduced-motion: reduce) {
   .hero-art.hero-gallery, .hero-floating-product { animation: none !important; }
 }
+
+
+/* Mobile sizing correction: use more of the screen and lift content upward */
+@media (max-width: 760px) {
+  .announcement-bar { min-height: 30px; padding: 5px 10px; font-size: 11px; }
+  .site-header { padding: 9px 12px 11px; gap: 9px; }
+  .brand-mark { width: 42px; height: 42px; flex-basis: 42px; }
+  .brand-copy strong { font-size: 16px; }
+  .search-box { height: 44px; }
+  .quick-nav { padding-top: 10px; padding-bottom: 10px; }
+  .hero.wrap {
+    margin: 7px 8px 0;
+    padding: 26px 20px 18px;
+    width: auto;
+  }
+  .hero-content h1 { font-size: clamp(2.35rem, 10vw, 3.1rem); }
+  .hero-content > p { font-size: 14px; line-height: 1.7; }
+  .hero-buttons .button { font-size: 13px; }
+  .hero-art.hero-gallery { min-height: 275px; height: min(76vw, 340px); }
+  .hero-featured-photo { width: min(70%, 270px); height: 80%; left: 15%; }
+  .trust-strip.wrap { margin: 9px 8px; padding: 16px 12px; }
+  .trust-strip b { font-size: 12px; }
+  .trust-strip small { font-size: 10px; }
+  .shop-layout.wrap { padding: 16px 10px 30px; }
+  #sidebar { padding: 15px 13px !important; }
+  #sidebar .sidebar-heading h2 { font-size: 15px; }
+  #sidebar .category-button { min-height: 43px; padding: 10px 14px; font-size: 12px; }
+  .section-heading h2 { font-size: clamp(1.85rem, 8vw, 2.35rem); }
+  .section-heading p { font-size: 13px; }
+  .product-grid { gap: 13px; }
+  .product-image { height: clamp(130px, 39vw, 180px); }
+  .product-card h3 { font-size: 13px; }
+  .product-card p, .product-card .product-description { font-size: 11px; }
+  .product-card .price { font-size: 14px; }
+  .product-card .add-button { min-height: 39px; font-size: 11px; }
+}
+@media (max-width: 380px) {
+  .hero-content h1 { font-size: 2.25rem; }
+  .hero-art.hero-gallery { min-height: 245px; }
+  .product-image { height: 128px; }
+}
