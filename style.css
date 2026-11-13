@@ -1142,3 +1142,34 @@ html.motion-ready .hero::after {
 @media(prefers-reduced-motion:reduce){
   .hero{background-size:cover!important}
 }
+
+
+/* Make the Ghizer Valley landscape unmistakably visible behind the hero */
+.hero{
+  background-color:#24483f !important;
+  background-image:
+    linear-gradient(90deg,rgba(8,34,27,.62) 0%,rgba(8,34,27,.38) 48%,rgba(8,34,27,.18) 100%),
+    url("images/ghizer-mountains.svg") !important;
+  background-size:cover !important;
+  background-position:center 62% !important;
+  background-repeat:no-repeat !important;
+}
+.hero-content{
+  background:linear-gradient(90deg,rgba(8,34,27,.18),rgba(8,34,27,0)) !important;
+}
+.hero-art.hero-gallery{
+  background:transparent !important;
+}
+.hero:before{
+  border-color:rgba(255,255,255,.16) !important;
+  box-shadow:0 0 0 35px rgba(255,255,255,.035),0 0 0 75px rgba(255,255,255,.02) !important;
+}
+@media(max-width:800px){
+  .hero{
+    background-image:
+      linear-gradient(180deg,rgba(8,34,27,.56) 0%,rgba(8,34,27,.30) 58%,rgba(8,34,27,.18) 100%),
+      url("images/ghizer-mountains.svg") !important;
+    background-position:center 60% !important;
+  }
+  .hero-content{background:rgba(8,34,27,.12)!important}
+}
