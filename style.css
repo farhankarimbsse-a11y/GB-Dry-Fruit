@@ -1120,3 +1120,25 @@ html.motion-ready .hero::after {
     min-width: 0;
   }
 }
+
+
+/* Ghizer Valley hero backdrop: bring the regional mountain artwork into the first screen */
+.hero{
+  background-image:
+    linear-gradient(90deg,rgba(248,246,237,.96) 0%,rgba(248,246,237,.90) 39%,rgba(248,246,237,.48) 72%,rgba(248,246,237,.30) 100%),
+    url("images/ghizer-mountains.svg");
+  background-size:cover;
+  background-position:center 52%;
+  background-repeat:no-repeat;
+}
+@media(max-width:800px){
+  .hero{
+    background-image:
+      linear-gradient(180deg,rgba(248,246,237,.94) 0%,rgba(248,246,237,.88) 45%,rgba(248,246,237,.48) 100%),
+      url("images/ghizer-mountains.svg");
+    background-position:center 48%;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .hero{background-size:cover!important}
+}
