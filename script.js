@@ -436,6 +436,28 @@
       }
     });
 
+    $("#customer-review-form")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      if (!form.reportValidity()) return;
+      const name = String($("#review-customer-name")?.value || "").trim();
+      const rating = Number($("#review-rating")?.value || 5);
+      const review = String($("#review-message")?.value || "").trim();
+      if (!name || !review || rating < 1 || rating > 5) return;
+      const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+      const message = [
+        "Assalam-o-Alaikum GB Dry Fruit!",
+        "I would like to share customer feedback:",
+        "",
+        "Name: " + name,
+        "Rating: " + stars + " (" + rating + "/5)",
+        "Feedback: " + review,
+        "",
+        "Please review this feedback before publishing it."
+      ].join("\\n");
+      openWhatsApp(message);
+    });
+
     const contact = $("#contact-whatsapp");
     if (contact) {
       contact.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Assalam-o-Alaikum GB Dry Fruit! I would like to know more about your products.")}`;
