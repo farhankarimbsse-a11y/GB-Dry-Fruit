@@ -131,6 +131,38 @@
     showToast.timer = setTimeout(() => toast.classList.remove("show"), 2800);
   }
 
+  // Keep the shopping cart on this device between page refreshes.
+  const CART_STORAGE_KEY = "gb-dry-fruit-cart-v1";
+  function saveCart() {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({
+        cart: state.cart,
+        quantities: state.quantities
+      }));
+    } catch (_) {
+      // Storage may be unavailable in private browsing; cart still works for this visit.
+    }
+  }
+  function restoreCart() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || "null");
+      if (!saved || typeof saved !== "object") return;
+      const validIds = new Set(products.filter(hasPrice).map((product) => String(product.id)));
+      for (const [id, quantity] of Object.entries(saved.cart || {})) {
+        if (validIds.has(id) && Number.isFinite(Number(quantity)) && Number(quantity) > 0) {
+          state.cart[id] = Math.min(99, Math.floor(Number(quantity)));
+        }
+      }
+      for (const [id, quantity] of Object.entries(saved.quantities || {})) {
+        if (validIds.has(id) && Number.isFinite(Number(quantity))) {
+          state.quantities[id] = Math.max(1, Math.min(99, Math.floor(Number(quantity))));
+        }
+      }
+    } catch (_) {
+      // Ignore invalid or unavailable saved cart data.
+    }
+  }
+
   function updateCartCount() {
     const count = Object.values(state.cart).reduce((sum, quantity) => sum + quantity, 0);
     const cartCount = $("#cart-count");
@@ -204,6 +236,7 @@
     const key = String(product.id);
     const quantity = state.quantities[key] || 1;
     state.cart[key] = (state.cart[key] || 0) + quantity;
+    saveCart();
     renderCart();
      openCart();
     showToast(`${product.name} added to your cart.`);
@@ -378,6 +411,7 @@
       else if (action === "plus") state.cart[id] = Math.min(99, (state.cart[id] || 0) + 1);
       else state.cart[id] = Math.max(0, (state.cart[id] || 0) - 1);
       if (state.cart[id] === 0) delete state.cart[id];
+      saveCart();
       renderCart();
     });
 
@@ -421,6 +455,7 @@
       const catalogue = await response.json();
       if (!Array.isArray(catalogue) || catalogue.length === 0) throw new Error("products.json is empty or invalid");
       products = catalogue;
+      restoreCart();
       // Keep higher-priced products visible by default (e.g. Kaju at Rs. 7,000).
       if ($("#max-price")) $("#max-price").value = String(state.max);
       renderCategoryButtons();
