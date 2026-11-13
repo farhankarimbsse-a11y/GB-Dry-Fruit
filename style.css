@@ -1321,3 +1321,25 @@ html.motion-ready .hero::after {
   .hero-art.hero-gallery { min-height: 245px; }
   .product-image { height: 128px; }
 }
+
+
+/* Customer feedback section */
+.customer-reviews-section{position:relative;overflow:hidden;padding:68px 0;background:linear-gradient(145deg,#f7f5ec 0%,#eef4e9 100%)}
+.customer-reviews-inner{position:relative;z-index:1;max-width:1000px}
+.customer-reviews-heading{max-width:650px;margin:0 auto 28px;text-align:center}
+.customer-reviews-heading h2{margin:9px 0 11px;color:#203b2b;font-family:'Playfair Display',Georgia,serif;font-size:clamp(2rem,4vw,2.8rem)}
+.customer-reviews-heading h2 em{color:#ad7d3d}
+.customer-reviews-heading>p{margin:0;color:#657064;line-height:1.8}
+.reviews-feedback-card{display:grid;grid-template-columns:76px minmax(0,.8fr) minmax(280px,1.2fr);align-items:start;gap:22px;padding:28px;border:1px solid #e5e6d9;border-radius:22px;background:rgba(255,255,255,.9);box-shadow:0 16px 38px rgba(28,54,31,.07)}
+.reviews-empty-mark{display:grid;place-items:center;width:64px;height:64px;border-radius:19px;background:#f8f0dd;color:#b4863d;font-size:32px}
+.reviews-feedback-copy h3{margin:5px 0 9px;color:#203b2b;font-family:'Playfair Display',Georgia,serif;font-size:21px}
+.reviews-feedback-copy p{margin:0;color:#758073;font-size:12px;line-height:1.8}
+.customer-review-form{display:grid;gap:8px}
+.customer-review-form label{margin-top:4px;color:#344b38;font-size:11px;font-weight:800}
+.customer-review-form input,.customer-review-form select,.customer-review-form textarea{width:100%;min-width:0;padding:11px 12px;border:1px solid #dfe6d9;border-radius:10px;background:#fcfdfb;color:#24392a;font:inherit;font-size:12px;outline:none}
+.customer-review-form input:focus,.customer-review-form select:focus,.customer-review-form textarea:focus{border-color:#16833b;box-shadow:0 0 0 3px rgba(22,131,59,.09)}
+.customer-review-form textarea{resize:vertical;line-height:1.6}
+.customer-review-form .button{justify-content:center;margin-top:5px}
+.customer-review-form>small{color:#879083;font-size:10px;line-height:1.6}
+@media(max-width:760px){.customer-reviews-section{padding:48px 0}.reviews-feedback-card{grid-template-columns:52px minmax(0,1fr);gap:14px;padding:19px;border-radius:17px}.reviews-empty-mark{width:48px;height:48px;border-radius:14px;font-size:25px}.reviews-feedback-copy h3{font-size:18px}.customer-review-form{grid-column:1/-1}.customer-reviews-heading>p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.reviews-feedback-card{scroll-behavior:auto}}
